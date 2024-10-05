@@ -1,7 +1,9 @@
 import { IoSearchSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../hooks/UseAuth";
 
 const Navbar = () => {
+  const { setShowLogin } = useAuthContext();
   return (
     <header className="fixed top-0 bg-yellow-300 shadow-md w-full">
       <nav className="max-w-[1336px] mx-auto flex justify-between items-center h-20 px-4">
@@ -26,9 +28,10 @@ const Navbar = () => {
           <Link to="/about">
             <li className="hidden sm:inline cursor-pointer">About</li>
           </Link>
-          <Link to="/login">
-            <li className="cursor-pointer">Login</li>
-          </Link>
+
+          <li onClick={() => setShowLogin(true)} className="cursor-pointer">
+            Login
+          </li>
         </ul>
       </nav>
     </header>

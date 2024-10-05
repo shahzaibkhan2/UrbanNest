@@ -2,10 +2,7 @@ import "dotenv/config.js";
 import { app } from "./app.js";
 import connectDB from "./db/index.js";
 
-app.get("/", (req, res) => {
-  return res.status(200).json({ message: "success", flag: true });
-});
-
+// Database Connection
 connectDB()
   .then(() => {
     app.listen(process.env.PORT || 5001, () =>
