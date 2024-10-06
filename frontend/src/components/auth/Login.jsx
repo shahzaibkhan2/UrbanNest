@@ -1,7 +1,10 @@
 import { RxCross2 } from "react-icons/rx";
 import { useAuthContext } from "../../hooks/UseAuth";
+import { useSelector } from "react-redux";
 
 const Login = () => {
+  const { user } = useSelector((state) => state.auth);
+  console.log(user);
   const {
     currentState,
     setCurrentState,
@@ -9,10 +12,14 @@ const Login = () => {
     nameRef,
     emailRef,
     passRef,
+    onAuthSubmitHandler,
   } = useAuthContext();
   return (
     <main className="h-screen w-screen absolute top-0 bg-black bg-opacity-80 grid place-content-center z-50">
-      <form className="w-96 px-8 py-6 bg-yellow-300 bg-opacity-90 text-blue-950 h-max rounded-2xl">
+      <form
+        onSubmit={onAuthSubmitHandler}
+        className="w-96 px-8 py-6 bg-yellow-300 bg-opacity-90 text-blue-950 h-max rounded-2xl"
+      >
         <div className="flex justify-between mb-6">
           <h2 className="font-bold text-3xl">{currentState}</h2>
           <div className="flex gap-1">
@@ -23,11 +30,11 @@ const Login = () => {
             />
           </div>
         </div>
-        <form className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10">
           {currentState === "Sign Up" && (
             <input
               className="rounded-lg focus:outline-none bg-yellow-200 p-3 text-blue-900"
-              name="name"
+              name="username"
               ref={nameRef}
               type="text"
               placeholder="Your Name..."
@@ -50,7 +57,7 @@ const Login = () => {
             placeholder="Your Password..."
             required
           />
-        </form>
+        </div>
         <button
           className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-white px-9 py-2 my-4 rounded-lg"
           type="submit"
@@ -64,12 +71,12 @@ const Login = () => {
             required
           />
           <p className="text-blue-950">
-            By proceeding, I agree to the terms of use and privacy policy.{" "}
+            By proceeding, I agree to the terms of use and privacy policy.
           </p>
         </div>
         {currentState === "Sign Up" ? (
           <p className="text-blue-950">
-            Already have an account?{" "}
+            Already have an account?
             <span
               className="cursor-pointer text-blue-800"
               onClick={() => setCurrentState("Login")}
@@ -79,7 +86,7 @@ const Login = () => {
           </p>
         ) : (
           <p className="text-blue-950">
-            Create a new account?{" "}
+            Create a new account?
             <span
               className="cursor-pointer text-blue-800"
               onClick={() => setCurrentState("Sign Up")}

@@ -92,10 +92,12 @@ const loginUser = asyncHandler(async (req, res) => {
     );
   }
 
-  res
+  const filteredUser = await User.findById(user?._id).select("-password");
+
+  return res
     .status(200)
     .cookie("accessToken", accessToken, httpOptions)
-    .json(new ApiResponse(200, "Login successful !"));
+    .json(new ApiResponse(200, { user: filteredUser }, "Login successful !"));
 });
 
 // Logout User

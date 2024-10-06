@@ -1,18 +1,23 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "../store/features/authSlice";
+import { toast } from "sonner";
 
 export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
+  const dispatch = useDispatch();
   // <------------------- Routes and Navigation ----------------->
 
   //<----------------------- States --------------------------->
 
   // <====== Authentication States ======>
-  const [accessToken, setAccessToken] = useState(null);
+
   const [currentState, setCurrentState] = useState("Sign Up");
   const [showLogin, setShowLogin] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
 
   // <------------------------------ useRef References ------------------------>
 
@@ -25,32 +30,49 @@ const AuthContextProvider = ({ children }) => {
   //   <------------------------ Methods & Functions ----------------------->
 
   // <======== Authentication Methods and Functions ========>
-  const onLogin = async (event) => {
+  const onAuthSubmitHandler = async (event) => {
     event.preventDefault();
     let authUri = apiUri.usersUri;
-    if (currentState === "Login") {
-      authUri += "/login";
-      const response = await axios.post(`${apiUri.baseUri}/${authUri}`, {
-        password: passRef.current.value,
-        email: emailRef.current.value,
-      });
+    try {
+      if (currentState === "Login") {
+        authUri += "/login";
+        setIsAuthLoading(true);
+        const response = await axios.post(
+          `${apiUri.baseUri}/${authUri}`,
+          {
+            password: passRef.current.value,
+            email: emailRef.current.value,
+          },
+          { withCredentials: true }
+        );
 
-      if (response.data.success) {
-        setAccessToken(response.data.data.accessToken);
-        setShowLogin(false);
-      }
-    } else {
-      authUri += "/register";
-      const response = await axios.post(`${apiUri.baseUri}/${authUri}`, {
-        name: nameRef.current.value,
-        password: passRef.current.value,
-        email: emailRef.current.value,
-      });
+        if (response.data.success) {
+          dispatch(setAuthUser(response.data.data));
+          setShowLogin(false);
+          toast.success("Login successful !");
+        }
+      } else {
+        authUri += "/register";
+        isAuthLoading(true);
+        const response = await axios.post(
+          `${apiUri.baseUri}/${authUri}`,
+          {
+            username: nameRef.current.value,
+            password: passRef.current.value,
+            email: emailRef.current.value,
+          },
+          { withCredentials: true }
+        );
 
-      if (response.data.success) {
-        setShowLogin(false);
-        console.log("Sign up successful !");
+        if (response.data.success) {
+          setShowLogin(false);
+          toast.success("Sign up successful !");
+        }
       }
+    } catch (error) {
+      toast.error("Sorry ! Some internal server error occured. ", error);
+    } finally {
+      setIsAuthLoading(false);
     }
   };
 
@@ -61,13 +83,13 @@ const AuthContextProvider = ({ children }) => {
   const contextValue = {
     currentState,
     setCurrentState,
-    accessToken,
     showLogin,
     setShowLogin,
-    onLogin,
+    onAuthSubmitHandler,
     nameRef,
     emailRef,
     passRef,
+    isAuthLoading,
   };
 
   //   <------------------------ Provider Wrapper ------------------------->
