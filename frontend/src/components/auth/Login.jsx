@@ -1,6 +1,7 @@
 import { RxCross2 } from "react-icons/rx";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { useSelector } from "react-redux";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const { user } = useSelector((state) => state.auth);
@@ -13,6 +14,7 @@ const Login = () => {
     emailRef,
     passRef,
     onAuthSubmitHandler,
+    isAuthLoading,
   } = useAuthContext();
   return (
     <main className="h-screen w-screen absolute top-0 bg-black bg-opacity-80 grid place-content-center z-50">
@@ -59,10 +61,17 @@ const Login = () => {
           />
         </div>
         <button
-          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-white px-9 py-2 my-4 rounded-lg"
+          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-2 my-4 rounded-lg flex items-center justify-center gap-2"
           type="submit"
         >
-          {currentState === "Sign Up" ? "Sign Up" : "Login"}
+          {isAuthLoading && (
+            <Loader2 className="animate-spin text-yellow-200" />
+          )}
+          {currentState === "Sign Up"
+            ? "Sign Up"
+            : isAuthLoading
+            ? "Logging in"
+            : "Login"}
         </button>
         <div className="flex gap-2">
           <input
