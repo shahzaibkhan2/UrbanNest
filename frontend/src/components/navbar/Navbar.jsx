@@ -43,7 +43,10 @@ const Navbar = () => {
             <li className="cursor-pointer">Contact</li>
           </Link>
         </ul>
-        <button className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 rounded-lg">
+        <button
+          onClick={() => setShowLogin(true)}
+          className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 rounded-lg"
+        >
           Login
         </button>
         <div className="relative flex text-blue-900 font-bold">
@@ -61,7 +64,7 @@ const Navbar = () => {
             />
           )}
           {toggleNavMenu && (
-            <ul className="fixed flex flex-col items-end justify-start gap-4 rounded-md animate-slide-in yellow-glassmorphism top-0 -right-2 z-10 px-6 py-3 w-[60vw] md:hidden h-screen list-none shadow-2xl">
+            <ul className="fixed flex flex-col items-end justify-start gap-4 rounded-md animate-slide-in yellow-glassmorphism top-0 -right-2 z-10 px-6 py-3 w-[80vw] xvs:w-[70vw] sm:w-[60vw] md:hidden h-screen list-none shadow-2xl">
               <li className="w-full my-2 text-xl">
                 <IoCloseOutline
                   onClick={() => setToggleNavMenu(false)}
@@ -75,7 +78,10 @@ const Navbar = () => {
                   classNameProps="text-lg md:text-xl my-2"
                 />
               ))}
-              <button className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 my-4 rounded-lg sm:hidden">
+              <button
+                onClick={() => setShowLogin(true)}
+                className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 my-4 rounded-lg sm:hidden"
+              >
                 Login
               </button>
               <form className="flex xvs:hidden items-center bg-yellow-200 rounded-lg p-3 border-[1px] border-yellow-400">
