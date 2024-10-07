@@ -56,6 +56,79 @@ const registerUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, "Registeration successful !"));
 });
 
+// Firebase Google Signin
+const googleSignIn = asyncHandler(async (req, res) => {
+  const { username, password, email, profilePicture } = req.body;
+
+  if (!username || !email) {
+    throw new ApiError(
+      401,
+      "Some fields are missing. All fields are required."
+    );
+  }
+
+  const isUser = await User.findOne({ email });
+
+  if (isUser) {
+    const isPasswordChecked = await isUser.isPasswordCorrect(isUser?.password);
+
+    if (!isPasswordChecked) {
+      throw new ApiError(
+        401,
+        "Invalid password. Please provide a correct password."
+      );
+    }
+
+    const { accessToken } = await generateAccessToken(isUser._id);
+
+    if (!accessToken) {
+      throw new ApiError(
+        500,
+        "Access token could not be created due to internal server error."
+      );
+    }
+
+    const filteredUser = await User.findById(isUser?._id).select("-password");
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, httpOptions)
+      .json(new ApiResponse(200, { user: filteredUser }, "Login successful !"));
+  } else {
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) +
+      Math.random().toString(36).slice(-8);
+    const createdUser = await User.create({
+      username,
+      email,
+      password: generatedPassword,
+      profilePicture,
+    });
+
+    if (!createdUser) {
+      throw new ApiError(
+        500,
+        "Internal server error and registeration failed."
+      );
+    }
+
+    const { accessToken } = await generateAccessToken(isUser._id);
+
+    const filteredUser = await User.findById(isUser?._id).select("-password");
+
+    return res
+      .status(201)
+      .cookie("accessToken", accessToken, httpOptions)
+      .json(
+        new ApiResponse(
+          201,
+          { user: filteredUser },
+          "Registeration successful !"
+        )
+      );
+  }
+});
+
 // Login User
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -137,4 +210,4 @@ const getUserProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Successfully got the user."));
 });
 
-export { registerUser, loginUser, logoutUser, getUserProfile };
+export { registerUser, loginUser, googleSignIn, logoutUser, getUserProfile };

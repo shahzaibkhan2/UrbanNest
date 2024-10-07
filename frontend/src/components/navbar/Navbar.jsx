@@ -45,7 +45,7 @@ const Navbar = () => {
         </ul>
         <button
           onClick={() => setShowLogin(true)}
-          className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 rounded-lg"
+          className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 rounded-lg"
         >
           Login
         </button>
@@ -80,7 +80,7 @@ const Navbar = () => {
               ))}
               <button
                 onClick={() => setShowLogin(true)}
-                className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-3 my-4 rounded-lg sm:hidden"
+                className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 my-4 rounded-lg sm:hidden"
               >
                 Login
               </button>

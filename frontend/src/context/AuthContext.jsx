@@ -4,6 +4,8 @@ import { apiUri } from "../constants/apiRoutes";
 import { useDispatch } from "react-redux";
 import { setAuthUser } from "../store/features/authSlice";
 import { toast } from "sonner";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import { app } from "../firebase/firebaseConfig";
 
 export const AuthContext = createContext();
 
@@ -28,6 +30,31 @@ const AuthContextProvider = ({ children }) => {
   const passRef = useRef();
 
   //   <------------------------ Methods & Functions ----------------------->
+
+  // <======== Firebase Google Authentication Methods and Functions ========>
+
+  const googleSignInHandler = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth(app);
+      const googleResponse = await signInWithPopup(auth, provider);
+
+      const response = await axios.post(
+        `${apiUri.baseUri}/${apiUri.usersUri}/google-signin`,
+        {
+          username: googleResponse.user.displayName,
+          email: googleResponse.user.email,
+          profilePicture: googleResponse.user.photoURL,
+        }
+      );
+
+      if (response.data.success) {
+        dispatch(setAuthUser(response.data.data));
+      }
+    } catch (error) {
+      console.log("Sorry ! Internal server error occured.", error);
+    }
+  };
 
   // <======== Authentication Methods and Functions ========>
   const onAuthSubmitHandler = async (event) => {
@@ -90,6 +117,7 @@ const AuthContextProvider = ({ children }) => {
     emailRef,
     passRef,
     isAuthLoading,
+    googleSignInHandler,
   };
 
   //   <------------------------ Provider Wrapper ------------------------->

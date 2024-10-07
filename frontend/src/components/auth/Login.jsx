@@ -62,7 +62,7 @@ const Login = () => {
           />
         </div>
         <button
-          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-2 my-4 rounded-lg flex items-center justify-center gap-2 text-md md:text-lg"
+          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-white px-9 py-2 my-4 rounded-lg flex items-center justify-center gap-2 text-md md:text-lg"
           type="submit"
         >
           {isAuthLoading && (
