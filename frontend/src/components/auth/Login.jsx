@@ -2,6 +2,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
+import GoogleSignIn from "./GoogleSignIn";
 
 const Login = () => {
   const { user } = useSelector((state) => state.auth);
@@ -61,7 +62,7 @@ const Login = () => {
           />
         </div>
         <button
-          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-2 my-4 rounded-lg flex items-center justify-center gap-2"
+          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-yellow-200 px-9 py-2 my-4 rounded-lg flex items-center justify-center gap-2 text-md md:text-lg"
           type="submit"
         >
           {isAuthLoading && (
@@ -73,6 +74,7 @@ const Login = () => {
             ? "Logging in"
             : "Login"}
         </button>
+        <GoogleSignIn />
         <div className="flex gap-2">
           <input
             className="mt-[-22px] cursor-pointer"
