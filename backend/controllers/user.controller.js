@@ -58,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 // Firebase Google Signin
 const googleSignIn = asyncHandler(async (req, res) => {
-  const { username, password, email, profilePicture } = req.body;
+  const { username, email, profilePicture } = req.body;
 
   if (!username || !email) {
     throw new ApiError(
@@ -70,15 +70,6 @@ const googleSignIn = asyncHandler(async (req, res) => {
   const isUser = await User.findOne({ email });
 
   if (isUser) {
-    const isPasswordChecked = await isUser.isPasswordCorrect(isUser?.password);
-
-    if (!isPasswordChecked) {
-      throw new ApiError(
-        401,
-        "Invalid password. Please provide a correct password."
-      );
-    }
-
     const { accessToken } = await generateAccessToken(isUser._id);
 
     if (!accessToken) {
@@ -112,9 +103,13 @@ const googleSignIn = asyncHandler(async (req, res) => {
       );
     }
 
-    const { accessToken } = await generateAccessToken(isUser._id);
+    await createdUser.save();
 
-    const filteredUser = await User.findById(isUser?._id).select("-password");
+    const { accessToken } = await generateAccessToken(createdUser._id);
+
+    const filteredUser = await User.findById(createdUser?._id).select(
+      "-password"
+    );
 
     return res
       .status(201)

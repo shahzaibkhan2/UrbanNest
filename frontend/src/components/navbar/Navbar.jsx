@@ -5,9 +5,11 @@ import { IoCloseOutline } from "react-icons/io5";
 import { CiMenuFries } from "react-icons/ci";
 import { useState } from "react";
 import { navTitles } from "../../data/navbarData";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const { setShowLogin } = useAuthContext();
+  const { user } = useSelector((state) => state.auth);
 
   const [toggleNavMenu, setToggleNavMenu] = useState(false);
   const NavItem = ({ title, classNameProps }) => {
@@ -43,12 +45,27 @@ const Navbar = () => {
             <li className="cursor-pointer">Contact</li>
           </Link>
         </ul>
-        <button
-          onClick={() => setShowLogin(true)}
-          className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 rounded-lg"
-        >
-          Login
-        </button>
+        {user?.user ? (
+          <div className="flex gap-2 items-center">
+            <img
+              src={user?.user?.profilePicture}
+              className="size-10 rounded-full"
+            />
+            <h2 className="font-semibold text-lg text-blue-900">
+              {user?.user?.username
+                .split(" ")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}
+            </h2>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowLogin(true)}
+            className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 rounded-lg"
+          >
+            Login
+          </button>
+        )}
         <div className="relative flex text-blue-900 font-bold">
           {toggleNavMenu ? (
             <IoCloseOutline
@@ -68,9 +85,32 @@ const Navbar = () => {
               <li className="w-full my-2 text-xl">
                 <IoCloseOutline
                   onClick={() => setToggleNavMenu(false)}
-                  className="cursor-pointer"
+                  className="cursor-pointer size-10 md:size-12"
                 />
               </li>
+              {user?.user ? (
+                <div className="flex gap-2 items-center">
+                  <img
+                    src={user?.user?.profilePicture}
+                    className="size-10 rounded-full"
+                  />
+                  <h2 className="font-semibold text-lg text-blue-900">
+                    {user?.user?.username
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ")}
+                  </h2>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowLogin(true)}
+                  className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 my-4 rounded-lg sm:hidden"
+                >
+                  Login
+                </button>
+              )}
               {navTitles.map((title, index) => (
                 <NavItem
                   title={title}
@@ -78,12 +118,6 @@ const Navbar = () => {
                   classNameProps="text-lg md:text-xl my-2"
                 />
               ))}
-              <button
-                onClick={() => setShowLogin(true)}
-                className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 my-4 rounded-lg sm:hidden"
-              >
-                Login
-              </button>
               <form className="flex xvs:hidden items-center bg-yellow-200 rounded-lg p-3 border-[1px] border-yellow-400">
                 <input
                   type="text"

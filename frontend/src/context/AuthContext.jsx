@@ -50,6 +50,7 @@ const AuthContextProvider = ({ children }) => {
 
       if (response.data.success) {
         dispatch(setAuthUser(response.data.data));
+        setShowLogin(false);
       }
     } catch (error) {
       console.log("Sorry ! Internal server error occured.", error);
