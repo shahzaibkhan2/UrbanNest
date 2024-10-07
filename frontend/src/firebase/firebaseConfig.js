@@ -15,3 +15,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+
+// Firebase Storage
+
+// allow read;
+//       allow write: if
+//       request.resource.size < 2 * 1024 * 1024 &&
+//       request.resource.contentType.matches("image/.*")

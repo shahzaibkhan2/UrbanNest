@@ -17,7 +17,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 bg-yellow-300 shadow-md w-full">
+    <header className="fixed top-0 bg-yellow-300 shadow-md w-full z-[9999]">
       <nav className="max-w-[1436px] mx-auto flex justify-between items-center h-20 px-4 md:pl-22 lg:pl-28">
         <Link to="/">
           <h1 className="text-xl sm:text-2xl font-bold flex flex-nowrap">

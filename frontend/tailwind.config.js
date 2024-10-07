@@ -6,6 +6,7 @@ export default {
       screens: {
         mf: "990px",
         xs: "400px",
+        xss: "450px",
         xvs: "350px",
       },
       keyframes: {
