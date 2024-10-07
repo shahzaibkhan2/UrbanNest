@@ -1,15 +1,15 @@
 import { IoSearchSharp } from "react-icons/io5";
-import { Link } from "react-router-dom";
-import { useAuthContext } from "../../hooks/UseAuth";
+import { Link, useNavigate } from "react-router-dom";
 import { IoCloseOutline } from "react-icons/io5";
 import { CiMenuFries } from "react-icons/ci";
 import { useState } from "react";
 import { navTitles } from "../../data/navbarData";
 import { useSelector } from "react-redux";
+import { RiArrowDownSFill } from "react-icons/ri";
 
 const Navbar = () => {
-  const { setShowLogin } = useAuthContext();
   const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const [toggleNavMenu, setToggleNavMenu] = useState(false);
   const NavItem = ({ title, classNameProps }) => {
@@ -46,7 +46,7 @@ const Navbar = () => {
           </Link>
         </ul>
         {user?.user ? (
-          <div className="flex gap-2 items-center">
+          <div className="hidden sm:flex gap-1 items-center">
             <img
               src={user?.user?.profilePicture}
               className="size-10 rounded-full"
@@ -57,10 +57,11 @@ const Navbar = () => {
                 .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                 .join(" ")}
             </h2>
+            <RiArrowDownSFill className="size-6 text-blue-900" />
           </div>
         ) : (
           <button
-            onClick={() => setShowLogin(true)}
+            onClick={() => navigate("/auth")}
             className="hidden sm:block bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 rounded-lg"
           >
             Login
@@ -89,7 +90,7 @@ const Navbar = () => {
                 />
               </li>
               {user?.user ? (
-                <div className="flex gap-2 items-center">
+                <div className="flex sm:hidden gap-1 items-center">
                   <img
                     src={user?.user?.profilePicture}
                     className="size-10 rounded-full"
@@ -102,10 +103,11 @@ const Navbar = () => {
                       )
                       .join(" ")}
                   </h2>
+                  <RiArrowDownSFill className="size-6 text-blue-900" />
                 </div>
               ) : (
                 <button
-                  onClick={() => setShowLogin(true)}
+                  onClick={() => navigate("/auth")}
                   className="bg-blue-900 w-fit hover:bg-blue-950 transition duration-300 text-white px-9 py-3 my-4 rounded-lg sm:hidden"
                 >
                   Login

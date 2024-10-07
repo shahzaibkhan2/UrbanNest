@@ -1,16 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 import { About, Home, Login, Profile } from "./pages";
-import { Navbar } from "./components";
-import { useAuthContext } from "./hooks/UseAuth";
+import { Navbar, PrivateProfileRoute } from "./components";
 const App = () => {
-  const { showLogin } = useAuthContext();
   return (
     <>
-      {showLogin && <Login />}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/auth" element={<Login />} />
+        <Route element={<PrivateProfileRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
         <Route path="/about" element={<About />} />
       </Routes>
     </>

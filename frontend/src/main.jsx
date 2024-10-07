@@ -18,14 +18,12 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={mainStore}>
       <PersistGate loading={null} persistor={persistor}>
-        <AuthContextProvider>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              <Toaster />
-              <App />
-            </BrowserRouter>
-          </QueryClientProvider>
-        </AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <Toaster />
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
       </PersistGate>
     </Provider>
   </StrictMode>

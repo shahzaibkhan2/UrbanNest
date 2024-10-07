@@ -1,22 +1,80 @@
 import { RxCross2 } from "react-icons/rx";
-import { useAuthContext } from "../../hooks/UseAuth";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Loader2 } from "lucide-react";
 import GoogleSignIn from "./GoogleSignIn";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apiUri } from "../../constants/apiRoutes";
+import { toast } from "sonner";
+import { useRef, useState } from "react";
+import { setAuthUser } from "../../store/features/authSlice";
 
 const Login = () => {
-  const { user } = useSelector((state) => state.auth);
-  console.log(user);
-  const {
-    currentState,
-    setCurrentState,
-    setShowLogin,
-    nameRef,
-    emailRef,
-    passRef,
-    onAuthSubmitHandler,
-    isAuthLoading,
-  } = useAuthContext();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  //<----------------------- States --------------------------->
+
+  // <====== Authentication States ======>
+
+  const [currentState, setCurrentState] = useState("Login");
+  const [isAuthLoading, setIsAuthLoading] = useState(false);
+
+  // <------------------------------ useRef References ------------------------>
+
+  // <====== Authentication useRef References ======>
+
+  const nameRef = useRef();
+  const emailRef = useRef();
+  const passRef = useRef();
+
+  // <======== Authentication Methods and Functions ========>
+  const onAuthSubmitHandler = async (event) => {
+    event.preventDefault();
+    let authUri = apiUri.usersUri;
+    setIsAuthLoading(true);
+    try {
+      if (currentState === "Login") {
+        authUri += "/login";
+        const response = await axios.post(
+          `${apiUri.baseUri}/${authUri}`,
+          {
+            password: passRef.current.value,
+            email: emailRef.current.value,
+          },
+          { withCredentials: true }
+        );
+
+        if (response.data.success) {
+          dispatch(setAuthUser(response.data.data));
+          toast.success("Login successful !");
+          navigate("/");
+        }
+      } else {
+        authUri += "/register";
+        setIsAuthLoading(true);
+        const response = await axios.post(
+          `${apiUri.baseUri}/${authUri}`,
+          {
+            username: nameRef.current.value,
+            password: passRef.current.value,
+            email: emailRef.current.value,
+          },
+          { withCredentials: true }
+        );
+
+        if (response.data.success) {
+          toast.success("Sign up successful !");
+          setCurrentState("Login");
+        }
+      }
+    } catch (error) {
+      toast.error("Sorry ! Some internal server error occured. ", error);
+    } finally {
+      setIsAuthLoading(false);
+    }
+  };
+
   return (
     <main className="h-screen w-screen absolute top-0 bg-black bg-opacity-80 grid place-content-center z-50">
       <form
@@ -28,7 +86,7 @@ const Login = () => {
           <div className="flex gap-1">
             <span className="text-md sm:text-lg">Close</span>
             <RxCross2
-              onClick={() => setShowLogin(false)}
+              onClick={() => navigate("/")}
               className="w-5 h-6 sm:w-6 sm:h-7 cursor-pointer"
             />
           </div>
@@ -69,7 +127,9 @@ const Login = () => {
             <Loader2 className="animate-spin text-yellow-200" />
           )}
           {currentState === "Sign Up"
-            ? "Sign Up"
+            ? isAuthLoading
+              ? "Signing up"
+              : "Sign Up"
             : isAuthLoading
             ? "Logging in"
             : "Login"}
