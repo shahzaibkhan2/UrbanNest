@@ -46,7 +46,7 @@ const Navbar = () => {
           </Link>
         </ul>
         {user?.user ? (
-          <div className="hidden sm:flex gap-1 items-center">
+          <div className="hidden sm:flex gap-1 items-center cursor-pointer">
             <img
               src={user?.user?.profilePicture}
               className="size-10 rounded-full"
@@ -90,7 +90,7 @@ const Navbar = () => {
                 />
               </li>
               {user?.user ? (
-                <div className="flex sm:hidden gap-1 items-center">
+                <div className="flex sm:hidden gap-1 items-center cursor-pointer">
                   <img
                     src={user?.user?.profilePicture}
                     className="size-10 rounded-full"
