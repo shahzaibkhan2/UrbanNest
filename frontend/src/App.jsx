@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { About, Home, Login, Profile } from "./pages";
 import { Navbar, PrivateProfileRoute } from "./components";
+import EditProfile from "./pages/EditProfile";
 const App = () => {
   return (
     <>
@@ -10,6 +11,7 @@ const App = () => {
         <Route path="/auth" element={<Login />} />
         <Route element={<PrivateProfileRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
         <Route path="/about" element={<About />} />
       </Routes>
