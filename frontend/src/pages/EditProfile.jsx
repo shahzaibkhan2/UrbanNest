@@ -138,7 +138,7 @@ const EditProfile = () => {
             </label>
             <input
               className={`appearance-none block w-full bg-yellow-100 text-blue-900 ${
-                errors ? "border-red-500" : "border-yellow-100"
+                errors?.email?.message ? "border-red-500" : "border-yellow-100"
               } border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-email"
               type="email"
@@ -155,7 +155,7 @@ const EditProfile = () => {
               })}
             />
             <p className="text-red-500 text-xs italic">
-              {errors && errors?.name?.message}
+              {errors && errors?.email?.message}
             </p>
           </div>
         </div>
@@ -169,7 +169,9 @@ const EditProfile = () => {
             </label>
             <input
               className={`appearance-none block w-full bg-yellow-100 text-blue-900 border ${
-                errors ? "border-red-500" : "border-yellow-100"
+                errors?.password?.message
+                  ? "border-red-500"
+                  : "border-yellow-100"
               } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-password"
               type="password"
@@ -205,7 +207,7 @@ const EditProfile = () => {
             </label>
             <input
               className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
-                errors ? "border-red-500" : "border-yellow-100"
+                errors?.city?.message ? "border-red-500" : "border-yellow-100"
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-city"
               type="text"
@@ -224,7 +226,7 @@ const EditProfile = () => {
               })}
             />
             <p className="text-red-500 text-xs italic">
-              {errors && errors?.name?.message}
+              {errors && errors?.city?.message}
             </p>
           </div>
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
@@ -238,7 +240,9 @@ const EditProfile = () => {
               <select
                 name="state"
                 className={`block appearance-none w-full bg-yellow-100 border ${
-                  errors ? "border-red-500" : "border-yellow-100"
+                  errors?.state?.message
+                    ? "border-red-500"
+                    : "border-yellow-100"
                 } text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
                 id="grid-state"
                 {...register("state", {
@@ -255,7 +259,7 @@ const EditProfile = () => {
                 })}
               >
                 <p className="text-red-500 text-xs italic">
-                  {errors && errors?.name?.message}
+                  {errors && errors?.state?.message}
                 </p>
                 <option>New York</option>
                 <option>California</option>
@@ -281,7 +285,7 @@ const EditProfile = () => {
             </label>
             <input
               className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
-                errors ? "border-red-500" : "border-yellow-100"
+                errors?.zip?.message ? "border-red-500" : "border-yellow-100"
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-zip"
               type="number"
@@ -300,7 +304,7 @@ const EditProfile = () => {
               })}
             />
             <p className="text-red-500 text-xs italic">
-              {errors && errors?.name?.message}
+              {errors && errors?.zip?.message}
             </p>
           </div>
         </div>
