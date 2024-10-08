@@ -3,9 +3,12 @@ import path from "path";
 
 const uriParser = new DataUriParser();
 
-const getDataUri = (file) => {
-  const extName = path.extname(file.originalname).toString();
-  return uriParser.format(extName, file.buffer).content;
+const getDataUri = (filePath) => {
+  if (!filePath) {
+    throw new Error("Sorry ! File path is required.");
+  }
+  const extName = path.extname(filePath?.originalname).toString();
+  return uriParser.format(extName, filePath.buffer).content;
 };
 
 export default getDataUri;

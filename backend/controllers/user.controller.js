@@ -3,6 +3,9 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import getDataUri from "../utils/dataUri.js";
+import bcrypt from "bcrypt";
 
 // Generate Access Token
 const generateAccessToken = async (userId) => {
@@ -205,4 +208,59 @@ const getUserProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Successfully got the user."));
 });
 
-export { registerUser, loginUser, googleSignIn, logoutUser, getUserProfile };
+const editProfile = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id;
+  const { username, email, password, city, state, zip } = req.body;
+  const profilePicture = req.file;
+
+  const isUser = await User.findById(userId);
+
+  if (!isUser) {
+    throw new ApiError(401, "Access token is either expired or invalid email.");
+  }
+
+  const profilePictureUri = getDataUri(profilePicture);
+
+  const cloudinaryResponse = await uploadOnCloudinary(profilePictureUri);
+
+  if (!cloudinaryResponse) {
+    throw new ApiError(500, "Sorry for internal server error.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const updateUser = await User.findByIdAndUpdate(userId, {
+    $set: {
+      username,
+      email,
+      password: hashedPassword,
+      avatar: cloudinaryResponse.secure_url,
+      city,
+      state,
+      zip,
+    },
+  });
+
+  await updateUser.save();
+
+  const filteredUser = await User.findById(updateUser?._id).select("-password");
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { user: filteredUser },
+        "Profile updated successfully !"
+      )
+    );
+});
+
+export {
+  registerUser,
+  loginUser,
+  googleSignIn,
+  logoutUser,
+  getUserProfile,
+  editProfile,
+};

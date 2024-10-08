@@ -17,10 +17,22 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
-    profilePicture: {
+    avatar: {
       type: String,
       default:
         "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-profile-picture-business-profile-woman-suitable-social-media-profiles-icons-screensavers-as-templatex9_719432-1310.jpg?semt=ais_hybrid",
+    },
+    city: {
+      type: String,
+      default: "New York",
+    },
+    state: {
+      type: String,
+      default: "New York",
+    },
+    zip: {
+      type: Number,
+      default: 904392,
     },
   },
   { timestamps: true }
