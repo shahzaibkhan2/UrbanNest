@@ -29,15 +29,24 @@ const Profile = () => {
         </div>
         <div className="mt-20 text-center border-b pb-12">
           <label className="font-semibold text-md text-blue-900">Name</label>
-          <h1 className="text-4xl font-medium text-gray-700">
-            {user?.user?.username
-              .split(" ")
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(" ")}
+          <h1 className="text-4xl font-medium text-gray-700 capitalize">
+            {user?.user?.username}
           </h1>
           <div className="mt-8">
             <label className="font-semibold text-md text-blue-900">Email</label>
             <p className="font-light text-gray-600">{user?.user?.email}</p>
+          </div>
+          <div className="mt-8">
+            <label className="font-semibold text-md text-blue-900">City</label>
+            <p className="font-light text-gray-600">{user?.user?.city}</p>
+          </div>
+          <div className="mt-8">
+            <label className="font-semibold text-md text-blue-900">State</label>
+            <p className="font-light text-gray-600">{user?.user?.state}</p>
+          </div>
+          <div className="mt-8">
+            <label className="font-semibold text-md text-blue-900">Zip</label>
+            <p className="font-light text-gray-600">{user?.user?.zip}</p>
           </div>
         </div>
         <div className="mt-12 w-full">

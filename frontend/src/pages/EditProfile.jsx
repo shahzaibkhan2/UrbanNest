@@ -1,13 +1,13 @@
 import { Loader2 } from "lucide-react";
-import profilePic from "../assets/react.svg";
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setAuthUser } from "../store/features/authSlice";
+import { MdOutlineArrowBack } from "react-icons/md";
 
 const EditProfile = () => {
   const { user } = useSelector((state) => state.auth);
@@ -79,6 +79,11 @@ const EditProfile = () => {
           name="avatar"
           onChange={handleImageChange}
         />
+        <Link to="/profile">
+          <div className="flex flex-col text-blue-900 size-12 sm:size-14 rounded-full bg-yellow-300 items-center justify-center">
+            <MdOutlineArrowBack className="size-8 sm:size-10" />
+          </div>
+        </Link>
         <div className="size-32 rounded-full mx-auto">
           <img
             onClick={() =>
@@ -100,7 +105,9 @@ const EditProfile = () => {
               Name
             </label>
             <input
-              className="appearance-none block w-full bg-yellow-100 text-blue-900 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+              className={`appearance-none block w-full bg-yellow-100 text-blue-900 border ${
+                errors?.name?.message ? "border-red-500" : "border-yellow-100"
+              } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
               id="grid-username"
               type="text"
               placeholder="Jhon"
@@ -119,7 +126,7 @@ const EditProfile = () => {
               })}
             />
             <p className="text-red-500 text-xs italic">
-              Please fill out this field.
+              {errors && errors?.name?.message}
             </p>
           </div>
           <div className="w-full md:w-1/2 px-3">
@@ -130,7 +137,9 @@ const EditProfile = () => {
               Email
             </label>
             <input
-              className="appearance-none block w-full bg-yellow-100 text-blue-900 border border-yellow-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className={`appearance-none block w-full bg-yellow-100 text-blue-900 ${
+                errors ? "border-red-500" : "border-yellow-100"
+              } border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-email"
               type="email"
               name="email"
@@ -145,6 +154,9 @@ const EditProfile = () => {
                 },
               })}
             />
+            <p className="text-red-500 text-xs italic">
+              {errors && errors?.name?.message}
+            </p>
           </div>
         </div>
         <div className="flex flex-wrap -mx-3 mb-6">
@@ -156,7 +168,9 @@ const EditProfile = () => {
               Password
             </label>
             <input
-              className="appearance-none block w-full bg-yellow-100 text-blue-900 border border-yellow-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className={`appearance-none block w-full bg-yellow-100 text-blue-900 border ${
+                errors ? "border-red-500" : "border-yellow-100"
+              } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-password"
               type="password"
               name="password"
@@ -190,7 +204,9 @@ const EditProfile = () => {
               City
             </label>
             <input
-              className="appearance-none block w-full bg-yellow-100 text-gray-700 border border-yellow-100 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
+                errors ? "border-red-500" : "border-yellow-100"
+              } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-city"
               type="text"
               placeholder="New York"
@@ -207,6 +223,9 @@ const EditProfile = () => {
                 },
               })}
             />
+            <p className="text-red-500 text-xs italic">
+              {errors && errors?.name?.message}
+            </p>
           </div>
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
@@ -218,7 +237,9 @@ const EditProfile = () => {
             <div className="relative">
               <select
                 name="state"
-                className="block appearance-none w-full bg-yellow-100 border border-yellow-100 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className={`block appearance-none w-full bg-yellow-100 border ${
+                  errors ? "border-red-500" : "border-yellow-100"
+                } text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
                 id="grid-state"
                 {...register("state", {
                   minLength: {
@@ -233,6 +254,9 @@ const EditProfile = () => {
                   },
                 })}
               >
+                <p className="text-red-500 text-xs italic">
+                  {errors && errors?.name?.message}
+                </p>
                 <option>New York</option>
                 <option>California</option>
                 <option>Mexico</option>
@@ -256,7 +280,9 @@ const EditProfile = () => {
               Zip
             </label>
             <input
-              className="appearance-none block w-full bg-yellow-100 text-gray-700 border border-yellow-100 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
+                errors ? "border-red-500" : "border-yellow-100"
+              } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-zip"
               type="number"
               placeholder="93102"
@@ -273,10 +299,13 @@ const EditProfile = () => {
                 },
               })}
             />
+            <p className="text-red-500 text-xs italic">
+              {errors && errors?.name?.message}
+            </p>
           </div>
         </div>
         <button
-          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-white px-9 py-2 my-4 mt-4 rounded-lg flex items-center justify-center gap-2 text-md md:text-lg"
+          className="bg-blue-900 w-full hover:bg-blue-950 transition duration-300 text-white px-9 py-2 my-4 mt-8 rounded-lg flex items-center justify-center gap-2 text-md md:text-lg uppercase tracking-wide font-semibold"
           type="submit"
         >
           {isSubmitting && <Loader2 className="animate-spin text-white" />}

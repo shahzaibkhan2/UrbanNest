@@ -47,15 +47,9 @@ const Navbar = () => {
         </ul>
         {user?.user ? (
           <div className="hidden sm:flex gap-1 items-center cursor-pointer">
-            <img
-              src={user?.user?.profilePicture}
-              className="size-10 rounded-full"
-            />
-            <h2 className="font-semibold text-lg text-blue-900">
-              {user?.user?.username
-                .split(" ")
-                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(" ")}
+            <img src={user?.user?.avatar} className="size-10 rounded-full" />
+            <h2 className="font-semibold text-lg text-blue-900 capitalize">
+              {user?.user?.username}
             </h2>
             <RiArrowDownSFill className="size-6 text-blue-900" />
           </div>
@@ -92,16 +86,11 @@ const Navbar = () => {
               {user?.user ? (
                 <div className="flex sm:hidden gap-1 items-center cursor-pointer">
                   <img
-                    src={user?.user?.profilePicture}
+                    src={user?.user?.avatar}
                     className="size-10 rounded-full"
                   />
-                  <h2 className="font-semibold text-lg text-blue-900">
-                    {user?.user?.username
-                      .split(" ")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                      )
-                      .join(" ")}
+                  <h2 className="font-semibold text-lg text-blue-900 capitalize">
+                    {user?.user?.username}
                   </h2>
                   <RiArrowDownSFill className="size-6 text-blue-900" />
                 </div>
