@@ -268,17 +268,20 @@ const editProfile = asyncHandler(async (req, res) => {
 
 // Delete Profile
 const deleteProfile = asyncHandler(async (req, res) => {
-  const userId = req?.user?._id;
+  const userId = req?.user?._id.toString();
   const id = req?.params?.id;
 
-  if (userId !== id) {
+  const isUser = await User.findById(id);
+
+  if (userId !== isUser?._id.toString()) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
-  await User.findByIdAndDelete(id);
+  await User.findByIdAndDelete(isUser?._id);
 
   return res
     .status(200)
+    .clearCookie("accessToken")
     .json(new ApiResponse(200, "Profile deleted successfully !"));
 });
 

@@ -1,8 +1,35 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { apiUri } from "../constants/apiRoutes";
+import { toast } from "sonner";
+import { setAuthUser } from "../store/features/authSlice";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const deleteProfileHandler = async () => {
+    try {
+      const response = await axios.delete(
+        `${apiUri.baseUri}/${apiUri.usersUri}/delete-profile/${user?.user?._id}`,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        dispatch(setAuthUser(null));
+        toast.success("Profile Deleted successfully !");
+        navigate("/auth");
+      } else {
+        toast.error(
+          "Sorry ! There is some issue and profile could not be deleted."
+        );
+      }
+    } catch (error) {
+      toast.error("Sorry !", error.message);
+    }
+  };
   return (
     <div className="p-10 xs:p-16">
       <div className="p-8 bg-white shadow mt-24">
@@ -55,7 +82,10 @@ const Profile = () => {
               Create Lists
             </button>
 
-            <button className="text-white py-2 px-4 uppercase rounded bg-red-700 hover:bg-red-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap">
+            <button
+              onClick={deleteProfileHandler}
+              className="text-white py-2 px-4 uppercase rounded bg-red-700 hover:bg-red-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap"
+            >
               Delete Account
             </button>
           </div>
