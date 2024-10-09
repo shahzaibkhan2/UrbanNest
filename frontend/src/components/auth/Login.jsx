@@ -79,7 +79,7 @@ const Login = () => {
     <main className="h-screen w-screen absolute top-0 bg-black bg-opacity-80 grid place-content-center z-50">
       <form
         onSubmit={onAuthSubmitHandler}
-        className="w-64 xvs:w-80 sm:w-96 px-8 py-6 bg-yellow-300 bg-opacity-90 text-blue-950 h-max rounded-2xl"
+        className="w-64 xvs:w-80 sm:w-96 px-8 py-6 mt-24 bg-yellow-300 bg-opacity-90 text-blue-950 h-max rounded-2xl"
       >
         <div className="flex justify-between mb-6">
           <h2 className="font-bold text-2xl sm:text-3xl">{currentState}</h2>

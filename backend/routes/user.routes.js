@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deleteProfile,
   editProfile,
   googleSignIn,
   loginUser,
@@ -16,7 +17,8 @@ router.route("/login").post(loginUser);
 router.route("/google-signin").post(googleSignIn);
 router.route("/logout").post(verifyJWT, logoutUser);
 router
-  .route("/edit-profile")
+  .route("/edit-profile/:id")
   .post(verifyJWT, upload.single("avatar"), editProfile);
+router.route("/delete-profile/:id").delete(verifyJWT, deleteProfile);
 
 export default router;

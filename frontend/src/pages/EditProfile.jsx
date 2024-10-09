@@ -48,7 +48,7 @@ const EditProfile = () => {
 
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile`,
+        `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile/${user?.user?._id}`,
         formData,
         { withCredentials: true }
       );
@@ -110,7 +110,7 @@ const EditProfile = () => {
               } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
               id="grid-username"
               type="text"
-              placeholder="Jhon"
+              placeholder={user?.user?.username || "Jhon"}
               name="username"
               {...register("username", {
                 required: true,
@@ -143,7 +143,7 @@ const EditProfile = () => {
               id="grid-email"
               type="email"
               name="email"
-              placeholder="Jhon@example.com"
+              placeholder={user?.user?.email || "Jhon@example.com"}
               {...register("email", {
                 required: true,
                 validate: {
@@ -211,7 +211,7 @@ const EditProfile = () => {
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-city"
               type="text"
-              placeholder="New York"
+              placeholder={user?.user?.city || "New York"}
               name="city"
               {...register("city", {
                 minLength: {
@@ -261,7 +261,7 @@ const EditProfile = () => {
                 <p className="text-red-500 text-xs italic">
                   {errors && errors?.state?.message}
                 </p>
-                <option>New York</option>
+                <option>{user?.user?.state || "New York"}</option>
                 <option>California</option>
                 <option>Mexico</option>
               </select>
@@ -289,7 +289,7 @@ const EditProfile = () => {
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
               id="grid-zip"
               type="number"
-              placeholder="93102"
+              placeholder={user?.user?.zip || "93102"}
               name="zip"
               {...register("zip", {
                 minLength: {

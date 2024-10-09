@@ -208,10 +208,16 @@ const getUserProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, user, "Successfully got the user."));
 });
 
+// Edit Profile
 const editProfile = asyncHandler(async (req, res) => {
   const userId = req?.user?._id;
+  const id = req?.params?.id;
   const { username, email, password, city, state, zip } = req.body;
   const profilePicture = req.file;
+
+  if (userId !== id) {
+    throw new ApiError(401, "Sorry ! Invalid profile ID.");
+  }
 
   const isUser = await User.findById(userId);
 
@@ -229,17 +235,21 @@ const editProfile = asyncHandler(async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const updateUser = await User.findByIdAndUpdate(userId, {
-    $set: {
-      username,
-      email,
-      password: hashedPassword,
-      avatar: cloudinaryResponse.secure_url,
-      city,
-      state,
-      zip,
+  const updateUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $set: {
+        username,
+        email,
+        password: hashedPassword,
+        avatar: cloudinaryResponse.secure_url,
+        city,
+        state,
+        zip,
+      },
     },
-  });
+    { new: true }
+  );
 
   await updateUser.save();
 
@@ -256,6 +266,22 @@ const editProfile = asyncHandler(async (req, res) => {
     );
 });
 
+// Delete Profile
+const deleteProfile = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id;
+  const id = req?.params?.id;
+
+  if (userId !== id) {
+    throw new ApiError(401, "Sorry ! Invalid profile ID.");
+  }
+
+  await User.findByIdAndDelete(id);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Profile deleted successfully !"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -263,4 +289,5 @@ export {
   logoutUser,
   getUserProfile,
   editProfile,
+  deleteProfile,
 };
