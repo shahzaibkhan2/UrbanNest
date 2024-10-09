@@ -15,7 +15,7 @@ const router = Router();
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/google-signin").post(googleSignIn);
-router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/logout").get(verifyJWT, logoutUser);
 router
   .route("/edit-profile/:id")
   .post(verifyJWT, upload.single("avatar"), editProfile);

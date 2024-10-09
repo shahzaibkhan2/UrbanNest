@@ -10,6 +10,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Delete Profile
   const deleteProfileHandler = async () => {
     try {
       const response = await axios.delete(
@@ -24,6 +25,28 @@ const Profile = () => {
       } else {
         toast.error(
           "Sorry ! There is some issue and profile could not be deleted."
+        );
+      }
+    } catch (error) {
+      toast.error("Sorry !", error.message);
+    }
+  };
+
+  // Logout
+  const logoutProfileHandler = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUri.baseUri}/${apiUri.usersUri}/logout`,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        dispatch(setAuthUser(null));
+        toast.success("Profile logged out successfully !");
+        navigate("/auth");
+      } else {
+        toast.error(
+          "Sorry ! There is some issue and profile could not be logged out."
         );
       }
     } catch (error) {
@@ -49,7 +72,10 @@ const Profile = () => {
                 Edit Profile
               </button>
             </Link>
-            <button className="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full xss:w-fit text-nowrap">
+            <button
+              onClick={logoutProfileHandler}
+              className="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full xss:w-fit text-nowrap"
+            >
               Logout
             </button>
           </div>

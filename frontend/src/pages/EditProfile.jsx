@@ -36,6 +36,7 @@ const EditProfile = () => {
     }
   };
 
+  // Edit Profile
   const editProfileHandler = async (data) => {
     const formData = new FormData();
     formData.append("avatar", selectedImage.imageUrl);

@@ -185,7 +185,6 @@ const logoutUser = asyncHandler(async (req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
-    maxAge: 0,
   };
   return res
     .status(200)
@@ -279,9 +278,14 @@ const deleteProfile = asyncHandler(async (req, res) => {
 
   await User.findByIdAndDelete(isUser?._id);
 
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
   return res
     .status(200)
-    .clearCookie("accessToken")
+    .clearCookie("accessToken", options)
     .json(new ApiResponse(200, "Profile deleted successfully !"));
 });
 
