@@ -104,9 +104,12 @@ const Profile = () => {
         </div>
         <div className="mt-12 w-full">
           <div className="flex flex-col gap-6 mt-12 md:mt-0 mx-auto items-center">
-            <button className="text-white py-2 px-4 uppercase rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap">
-              Create Lists
-            </button>
+            <Link
+              to="/create-house-listing"
+              className="text-white py-2 px-4 uppercase rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap text-center text-xl"
+            >
+              <button>Create Post</button>
+            </Link>
 
             <button
               onClick={deleteProfileHandler}
