@@ -1,13 +1,33 @@
-import React from "react";
+import React, { useRef } from "react";
 import BlueButton from "../components/buttons/BlueButton";
+import { HiOutlineUpload } from "react-icons/hi";
 
 const CreateHouseListing = () => {
+  const imgOneRef = useRef(null);
+  const imgTwoRef = useRef(null);
+  const imgThreeRef = useRef(null);
+  const imgFourRef = useRef(null);
+  const imgFiveRef = useRef(null);
+
+  const handleClick = () => {
+    if (imgOneRef.current) {
+      imgOneRef.current.click();
+    } else if (imgTwoRef.current) {
+      imgTwoRef.current.click();
+    } else if (imgThreeRef.current) {
+      imgThreeRef.current.click();
+    } else if (imgFourRef.current) {
+      imgFourRef.current.click();
+    } else if (imgFiveRef.current) {
+      imgFiveRef.current.click();
+    }
+  };
   return (
     <main className="mt-32 flex flex-col create-house-listing gap-16">
       <h1 className="text-center text-3xl font-semibold text-blue-900">
         Create a House List
       </h1>
-      <form className="max-w-[800px] lg:max-w-[1200px] flex flex-col lg:flex-row mx-auto gap-20 px-[10%]">
+      <form className="max-w-[1000px] lg:max-w-[1200px] flex flex-col lg:flex-row mx-auto gap-20 px-[5%]">
         <section className="flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-3 mb-6">
             <div className="w-full">
@@ -54,7 +74,7 @@ const CreateHouseListing = () => {
               />
             </div>
           </div>
-          <div className="pb-8 pt-2 flex justify-between text-nowrap flex-wrap">
+          <div className="pb-8 pt-2 flex justify-between text-nowrap flex-wrap gap-y-8 gap-x-2">
             <div className="flex gap-2">
               <input type="checkbox" className="size-5" />
               <span className="text-md text-blue-900 font-semibold">
@@ -130,51 +150,50 @@ const CreateHouseListing = () => {
           </div>
         </section>
         <section className="flex flex-col flex-1 text-center">
-          <div className="flex mb-4">
-            <div className="flex justify-center items-center w-2/3 bg-gray-500 h-40">
+          <div className="flex mb-4 text-md md:text-lg font-semibold text-blue-950">
+            <div className="flex justify-center items-center w-2/3 bg-yellow-200 h-40 text-wrap">
               Upload cover image
             </div>
-            <div className="flex justify-center items-center w-1/3 bg-gray-400 h-40">
+            <div className="flex justify-center items-center w-1/3 bg-yellow-100 h-40 text-wrap">
               Upload image 1
             </div>
           </div>
 
-          <div className="flex mb-4 gap-6">
-            <input
-              type="file"
-              className="flex justify-center items-center w-2/3 bg-gray-500"
-            />
-            <BlueButton>Upload image</BlueButton>
-            <input
-              type="file"
-              className="flex justify-center items-center w-1/3 bg-gray-400"
-            />
+          <div className="flex  mb-4 gap-6">
+            <input ref={imgOneRef} type="file" className="hidden" />
+            <BlueButton onClick={handleClick}>
+              Upload <HiOutlineUpload className="size-5" />
+            </BlueButton>
+            <input ref={imgTwoRef} type="file" className="hidden" />
+            <BlueButton onClick={handleClick}>
+              Upload <HiOutlineUpload className="size-5" />
+            </BlueButton>
           </div>
 
-          <div className="flex">
-            <div className="flex justify-center items-center w-1/2 bg-gray-500 h-40">
+          <div className="flex text-md md:text-lg font-semibold text-blue-950">
+            <div className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap">
               Upload image 2
             </div>
-            <div className="flex justify-center items-center w-1/2 bg-gray-400 h-40">
+            <div className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap">
               Upload image 3
             </div>
-            <div className="flex justify-center items-center w-1/2 bg-gray-500 h-40">
+            <div className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap">
               Upload image 4
             </div>
           </div>
           <div className="flex gap-6 mt-4">
-            <input
-              type="file"
-              className="flex justify-center items-center w-1/2 bg-gray-500"
-            />
-            <input
-              type="file"
-              className="flex justify-center items-center w-1/2 bg-gray-400"
-            />
-            <input
-              type="file"
-              className="flex justify-center items-center w-1/2 bg-gray-500"
-            />
+            <input ref={imgThreeRef} type="file" className="hidden" />
+            <BlueButton onClick={handleClick}>
+              Upload <HiOutlineUpload className="size-5" />
+            </BlueButton>
+            <input ref={imgFourRef} type="file" className="hidden" />
+            <BlueButton onClick={handleClick}>
+              Upload <HiOutlineUpload className="size-5" />
+            </BlueButton>
+            <input ref={imgFiveRef} type="file" className="hidden" />
+            <BlueButton onClick={handleClick}>
+              Upload <HiOutlineUpload className="size-5" />
+            </BlueButton>
           </div>
         </section>
       </form>
