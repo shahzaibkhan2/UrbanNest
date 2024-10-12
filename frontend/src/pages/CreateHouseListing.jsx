@@ -1,27 +1,88 @@
-import React, { useRef } from "react";
-import BlueButton from "../components/buttons/BlueButton";
-import { HiOutlineUpload } from "react-icons/hi";
+import React, { useEffect, useRef, useState } from "react";
+import { BlueButton } from "../components";
+import { Loader2 } from "lucide-react";
 
 const CreateHouseListing = () => {
+  // States
+  const [selectedImage, setSelectedImage] = useState({
+    coverImageUrl: null,
+    coverImagePreview: null,
+    imageOneUrl: null,
+    imageOnePreview: null,
+    imageTwoUrl: null,
+    imageTwoPreview: null,
+    imageThreeUrl: null,
+    imageThreePreview: null,
+    imageFourUrl: null,
+    imageFourPreview: null,
+  });
+
+  // Refs
+  const coverImgRef = useRef(null);
   const imgOneRef = useRef(null);
   const imgTwoRef = useRef(null);
   const imgThreeRef = useRef(null);
   const imgFourRef = useRef(null);
-  const imgFiveRef = useRef(null);
 
-  const handleClick = () => {
-    if (imgOneRef.current) {
+  // Handle Click on div to recieve input
+  const handleClick = (imgNum) => {
+    if (coverImgRef.current && imgNum === "cover") {
+      coverImgRef.current.click();
+    } else if (imgOneRef.current && imgNum === "one") {
       imgOneRef.current.click();
-    } else if (imgTwoRef.current) {
+    } else if (imgTwoRef.current && imgNum === "two") {
       imgTwoRef.current.click();
-    } else if (imgThreeRef.current) {
+    } else if (imgThreeRef.current && imgNum === "three") {
       imgThreeRef.current.click();
-    } else if (imgFourRef.current) {
+    } else if (imgFourRef.current && imgNum === "four") {
       imgFourRef.current.click();
-    } else if (imgFiveRef.current) {
-      imgFiveRef.current.click();
     }
   };
+
+  // Handle image upload
+  const handleImageChange = (e, imgNum) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (imgNum === "cover") {
+          setSelectedImage((prev) => ({
+            ...prev,
+            coverImageUrl: file,
+            coverImagePreview: reader.result,
+          }));
+        } else if (imgNum === "one") {
+          setSelectedImage((prev) => ({
+            ...prev,
+            imageOneUrl: file,
+            imageOnePreview: reader.result,
+          }));
+        } else if (imgNum === "two") {
+          setSelectedImage((prev) => ({
+            ...prev,
+            imageTwoUrl: file,
+            imageTwoPreview: reader.result,
+          }));
+        } else if (imgNum === "three") {
+          setSelectedImage((prev) => ({
+            ...prev,
+            imageThreeUrl: file,
+            imageThreePreview: reader.result,
+          }));
+        } else if (imgNum === "four") {
+          setSelectedImage((prev) => ({
+            ...prev,
+            imageFourUrl: file,
+            imageFourPreview: reader.result,
+          }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // <====================================== JSX Section ======================================>
+
   return (
     <main className="mt-32 flex flex-col create-house-listing gap-16">
       <h1 className="text-center text-3xl font-semibold text-blue-900">
@@ -150,54 +211,151 @@ const CreateHouseListing = () => {
           </div>
         </section>
         <section className="flex flex-col flex-1 text-center">
-          <div className="flex mb-4 text-md md:text-lg font-semibold text-blue-950">
+          <h2 className="text-lg text-green-600 font-semibold mb-8">
+            Upload your premises images here
+          </h2>
+          <div className="flex mb-4 text-md md:text-lg font-semibold text-blue-950 gap-2">
             <div
-              onClick={handleClick}
+              onClick={() => handleClick("cover")}
               className="flex justify-center items-center w-2/3 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
             >
-              Upload cover image
+              {selectedImage?.coverImagePreview ? (
+                <img
+                  src={
+                    selectedImage?.coverImagePreview
+                      ? selectedImage?.coverImagePreview
+                      : ""
+                  }
+                  alt="cover-image"
+                  className="object-cover size-full overflow-hidden"
+                />
+              ) : (
+                "Choose cover image"
+              )}
             </div>
             <div
-              onClick={handleClick}
+              onClick={() => handleClick("one")}
               className="flex justify-center items-center w-1/3 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
             >
-              Upload image 1
+              {selectedImage?.imageOnePreview ? (
+                <img
+                  src={
+                    selectedImage?.imageOnePreview
+                      ? selectedImage?.imageOnePreview
+                      : ""
+                  }
+                  alt="image-one"
+                  className="object-cover size-full overflow-hidden"
+                />
+              ) : (
+                "Choose image 1"
+              )}
             </div>
           </div>
 
           <div className="flex  mb-4 gap-6">
-            <input ref={imgOneRef} type="file" className="hidden" />
+            <input
+              ref={coverImgRef}
+              onChange={(e) => handleImageChange(e, "cover")}
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
 
-            <input ref={imgTwoRef} type="file" className="hidden" />
+            <input
+              ref={imgOneRef}
+              onChange={(e) => handleImageChange(e, "one")}
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
           </div>
 
-          <div className="flex text-md md:text-lg font-semibold text-blue-950">
+          <div className="flex text-md md:text-lg font-semibold text-blue-950 mb-6 gap-2">
             <div
-              onClick={handleClick}
-              className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
-            >
-              Upload image 2
-            </div>
-            <div
-              onClick={handleClick}
+              onClick={() => handleClick("two")}
               className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
             >
-              Upload image 3
+              {selectedImage?.imageTwoPreview ? (
+                <img
+                  src={
+                    selectedImage?.imageTwoPreview
+                      ? selectedImage?.imageTwoPreview
+                      : ""
+                  }
+                  alt="image-two"
+                  className="object-cover size-full overflow-hidden"
+                />
+              ) : (
+                "Choose image 2"
+              )}
             </div>
             <div
-              onClick={handleClick}
-              className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
+              onClick={() => handleClick("three")}
+              className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
             >
-              Upload image 4
+              {selectedImage?.imageThreePreview ? (
+                <img
+                  src={
+                    selectedImage?.imageThreePreview
+                      ? selectedImage?.imageThreePreview
+                      : ""
+                  }
+                  alt="image-three"
+                  className="object-cover size-full overflow-hidden"
+                />
+              ) : (
+                "Choose image 3"
+              )}
+            </div>
+            <div
+              onClick={() => handleClick("four")}
+              className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
+            >
+              {selectedImage?.imageFourPreview ? (
+                <img
+                  src={
+                    selectedImage?.imageFourPreview
+                      ? selectedImage?.imageFourPreview
+                      : ""
+                  }
+                  alt="image-four"
+                  className="object-cover size-full overflow-hidden"
+                />
+              ) : (
+                "Choose image 4"
+              )}
             </div>
           </div>
           <div className="flex gap-6 mt-4">
-            <input ref={imgThreeRef} type="file" className="hidden" />
+            <input
+              ref={imgTwoRef}
+              onChange={(e) => handleImageChange(e, "two")}
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
 
-            <input ref={imgFourRef} type="file" className="hidden" />
+            <input
+              ref={imgThreeRef}
+              onChange={(e) => handleImageChange(e, "three")}
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
 
-            <input ref={imgFiveRef} type="file" className="hidden" />
+            <input
+              ref={imgFourRef}
+              onChange={(e) => handleImageChange(e, "four")}
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
           </div>
+          <BlueButton type="submit">
+            <Loader2 className="animate-spin" />
+            Create List
+          </BlueButton>
         </section>
       </form>
     </main>
