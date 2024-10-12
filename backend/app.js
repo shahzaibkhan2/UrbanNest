@@ -16,7 +16,9 @@ app.use(cookieParser());
 
 // Routes Imports
 import userRouter from "./routes/user.routes.js";
+import listingRouter from "./routes/listing.routes.js";
 // Routes
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/house-listings", listingRouter);
 
 export { app };

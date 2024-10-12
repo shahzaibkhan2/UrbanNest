@@ -1,0 +1,13 @@
+import { Router } from "express";
+
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middlewares.js";
+import { createListing } from "../controllers/listing.controller.js";
+
+const router = Router();
+
+router
+  .route("/create-listing")
+  .post(upload.array("images", 5), verifyJWT, createListing);
+
+export default router;
