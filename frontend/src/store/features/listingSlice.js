@@ -6,8 +6,11 @@ const listingSlice = createSlice({
     listingData: [],
   },
   reducers: {
+    // setListingData: (state, action) => {
+    //   state.listingData.push(action.payload);
+    // },
     setListingData: (state, action) => {
-      state.listingData.push(action.payload);
+      state.listingData = [state.listingData, action.payload];
     },
   },
 });

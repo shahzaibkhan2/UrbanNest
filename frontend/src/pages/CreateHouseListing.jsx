@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { apiUri } from "../constants/apiRoutes";
-import { setListingData } from "../store/features/listingSlice";
 import axios from "axios";
+import { setListingData } from "../store/features/listingSlice";
 
 const CreateHouseListing = () => {
   const dispatch = useDispatch();
@@ -144,8 +144,7 @@ const CreateHouseListing = () => {
         `${apiUri.baseUri}/${apiUri.houseListingUri}/create-listing`,
         formData
       );
-
-      console.log(response.data);
+      console.log(response.data.data);
 
       if (response.data.success) {
         dispatch(setListingData(response.data.data));
