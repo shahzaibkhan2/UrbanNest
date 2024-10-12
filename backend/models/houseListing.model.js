@@ -50,7 +50,7 @@ const houseListingSchema = new Schema(
       type: String,
       required: true,
     },
-    houseImage: {
+    houseImages: {
       type: Array,
       required: true,
     },
