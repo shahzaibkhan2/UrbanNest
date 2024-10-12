@@ -1,5 +1,9 @@
+import { useSelector } from "react-redux";
+
 const About = () => {
-  return <div>About</div>;
+  const { listingData } = useSelector((state) => state.listing);
+  console.log(listingData);
+  return <div>hello</div>;
 };
 
 export default About;

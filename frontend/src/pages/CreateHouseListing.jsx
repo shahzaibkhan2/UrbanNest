@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { apiUri } from "../constants/apiRoutes";
+import { setListingData } from "../store/features/listingSlice";
+import axios from "axios";
 
 const CreateHouseListing = () => {
   const dispatch = useDispatch();
@@ -112,16 +114,17 @@ const CreateHouseListing = () => {
       selectedImage.imageFourUrl,
     ];
 
-    if (data.discountPrice < data.normalPrice) {
+    if (
+      data.discountPrice &&
+      parseFloat(data.discountPrice) > data.normalPrice &&
+      parseFloat(data.normalPrice)
+    ) {
       toast.error("Sorry ! Discount price should be lower than normal price");
-      throw new Error(
-        "Sorry ! Discount price should be lower than normal price"
-      );
     }
 
     // Making a Form of Data
     const formData = new FormData();
-    formData.append("houseImages", images);
+    images.forEach((image) => formData.append("houseImages[]", image));
     formData.append("title", data.title);
     formData.append("description", data.description);
     formData.append("address", data.address);
@@ -133,25 +136,26 @@ const CreateHouseListing = () => {
     formData.append("furnished", data.furnished);
     formData.append("offer", data.offer);
     formData.append("houseType", data.houseType);
-    formData.append("owner", user._id);
+    formData.append("owner", user?.user?._id);
 
     // API Call
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.usersUri}/${apiUri.houseListingUri}/${user?.user?._id}`,
-        formData,
-        { withCredentials: true }
+        `${apiUri.baseUri}/${apiUri.houseListingUri}/create-listing`,
+        formData
       );
 
+      console.log(response.data);
+
       if (response.data.success) {
-        dispatch(setAuthUser(response.data.data));
-        toast.success("Profile updated successfully !");
-        navigate("/profile");
+        dispatch(setListingData(response.data.data));
+        toast.success("House listing created successfully !");
+        // navigate("/profile");
       } else {
         toast.error("Sorry ! There is some issue with the form submission.");
       }
     } catch (error) {
-      toast.error("Sorry !", error.message);
+      toast.error("Sorry ! Some error occured.", error.message);
     }
   };
 
@@ -188,7 +192,7 @@ const CreateHouseListing = () => {
                       "Title characters should be greater than or equal to 4.",
                   },
                   maxLength: {
-                    value: 20,
+                    value: 100,
                     message: "Title characters should not be more than 20.",
                   },
                 })}
@@ -215,7 +219,7 @@ const CreateHouseListing = () => {
                       "Description characters should be greater than or equal to 4.",
                   },
                   maxLength: {
-                    value: 100,
+                    value: 400,
                     message:
                       "Description characters should not be more than 100.",
                   },
@@ -235,8 +239,8 @@ const CreateHouseListing = () => {
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 type="text"
                 id="address"
-                placeholder="Address"
-                {...register("Address", {
+                placeholder="address"
+                {...register("address", {
                   required: true,
                   minLength: {
                     value: 4,
@@ -244,7 +248,7 @@ const CreateHouseListing = () => {
                       "Address characters should be greater than or equal to 4.",
                   },
                   maxLength: {
-                    value: 80,
+                    value: 200,
                     message: "Address characters should not be more than 80.",
                   },
                 })}
@@ -308,7 +312,7 @@ const CreateHouseListing = () => {
                 type="number"
                 defaultValue="100"
                 placeholder="$100"
-                {...register("price", {
+                {...register("normalPrice", {
                   required: true,
                   min: 100,
                   max: 10000000,
@@ -524,9 +528,9 @@ const CreateHouseListing = () => {
               className="hidden"
             />
           </div>
-          <BlueButton type="submit">
+          <BlueButton isSubmitting={isSubmitting} type="submit">
             {isSubmitting && <Loader2 className="animate-spin" />}
-            Create List
+            {isSubmitting ? "Creating..." : "Create List"}
           </BlueButton>
         </section>
       </form>
