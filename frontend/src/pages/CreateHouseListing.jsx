@@ -1,13 +1,16 @@
 import React, { useRef, useState } from "react";
 import { BlueButton } from "../components";
 import { Loader2 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { apiUri } from "../constants/apiRoutes";
 
 const CreateHouseListing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
 
   // States
   const [selectedImage, setSelectedImage] = useState({
@@ -22,6 +25,8 @@ const CreateHouseListing = () => {
     imageFourUrl: null,
     imageFourPreview: null,
   });
+
+  const [showDiscount, setShowDiscount] = useState(false);
 
   // Refs
   const coverImgRef = useRef(null);
@@ -107,6 +112,13 @@ const CreateHouseListing = () => {
       selectedImage.imageFourUrl,
     ];
 
+    if (data.discountPrice < data.normalPrice) {
+      toast.error("Sorry ! Discount price should be lower than normal price");
+      throw new Error(
+        "Sorry ! Discount price should be lower than normal price"
+      );
+    }
+
     // Making a Form of Data
     const formData = new FormData();
     formData.append("houseImages", images);
@@ -114,19 +126,19 @@ const CreateHouseListing = () => {
     formData.append("description", data.description);
     formData.append("address", data.address);
     formData.append("normalPrice", data.normalPrice);
-    formData.append("discountPrice", data.discountPrice);
+    formData.append("discountPrice", data.discountPrice || 0);
     formData.append("bedrooms", data.bedrooms);
     formData.append("bathrooms", data.bathrooms);
     formData.append("parking", data.parking);
     formData.append("furnished", data.furnished);
     formData.append("offer", data.offer);
     formData.append("houseType", data.houseType);
-    formData.append("owner", data.owner);
+    formData.append("owner", user._id);
 
     // API Call
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile/${user?.user?._id}`,
+        `${apiUri.baseUri}/${apiUri.usersUri}/${apiUri.houseListingUri}/${user?.user?._id}`,
         formData,
         { withCredentials: true }
       );
@@ -244,7 +256,7 @@ const CreateHouseListing = () => {
               <input
                 type="checkbox"
                 className="size-5"
-                {...register("furnished", { required: true })}
+                {...register("furnished")}
               />
               <span className="text-md text-blue-900 font-semibold">
                 Furnished
@@ -254,7 +266,7 @@ const CreateHouseListing = () => {
               <input
                 type="checkbox"
                 className="size-5"
-                {...register("parking", { required: true })}
+                {...register("parking")}
               />
               <span className="text-md text-blue-900 font-semibold">
                 Parking Garrage
@@ -264,8 +276,9 @@ const CreateHouseListing = () => {
               <input
                 type="radio"
                 value="sell"
+                defaultChecked="sell"
                 className="size-5"
-                {...register("houseType", { required: true })}
+                {...register("houseType")}
               />
               <span className="text-md text-blue-900 font-semibold">Sell</span>
             </div>
@@ -274,15 +287,16 @@ const CreateHouseListing = () => {
                 type="radio"
                 value="rent"
                 className="size-5"
-                {...register("houseType", { required: true })}
+                {...register("houseType")}
               />
               <span className="text-md text-blue-900 font-semibold">Rent</span>
             </div>
             <div className="flex gap-2">
               <input
+                onClick={() => setShowDiscount((prev) => !prev)}
                 type="checkbox"
                 className="size-5"
-                {...register("offer", { required: true })}
+                {...register("offer")}
               />
               <span className="text-md text-blue-900 font-semibold">Offer</span>
             </div>
@@ -292,9 +306,13 @@ const CreateHouseListing = () => {
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 type="number"
+                defaultValue="100"
                 placeholder="$100"
-                min="1"
-                {...register("price", { required: true, min: 1 })}
+                {...register("price", {
+                  required: true,
+                  min: 100,
+                  max: 10000000,
+                })}
                 id="price"
               />
               <label
@@ -308,6 +326,7 @@ const CreateHouseListing = () => {
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 type="number"
+                defaultValue={1}
                 placeholder="1"
                 min="1"
                 max="8"
@@ -325,6 +344,7 @@ const CreateHouseListing = () => {
               <input
                 className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 type="number"
+                defaultValue={1}
                 placeholder="1"
                 min="1"
                 max="8"
@@ -339,22 +359,27 @@ const CreateHouseListing = () => {
               </label>
             </div>
 
-            <div className="flex gap-2 items-center">
-              <input
-                className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                type="number"
-                placeholder="$100"
-                min="1"
-                {...register("discountPrice", { required: true })}
-                id="discountPrice"
-              />
-              <label
-                htmlFor="discountPrice"
-                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-              >
-                Discount Price
-              </label>
-            </div>
+            {showDiscount && (
+              <div className="flex gap-2 items-center">
+                <input
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  type="number"
+                  placeholder="$0"
+                  {...register("discountPrice", {
+                    required: true,
+                    min: 100,
+                    max: 10000000,
+                  })}
+                  id="discountPrice"
+                />
+                <label
+                  htmlFor="discountPrice"
+                  className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                >
+                  Discount Price
+                </label>
+              </div>
+            )}
           </div>
         </section>
         <section className="flex flex-col flex-1 text-center">
@@ -500,7 +525,7 @@ const CreateHouseListing = () => {
             />
           </div>
           <BlueButton type="submit">
-            <Loader2 className="animate-spin" />
+            {isSubmitting && <Loader2 className="animate-spin" />}
             Create List
           </BlueButton>
         </section>

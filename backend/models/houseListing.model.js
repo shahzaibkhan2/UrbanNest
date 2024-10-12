@@ -20,7 +20,7 @@ const houseListingSchema = new Schema(
     },
     discountPrice: {
       type: Number,
-      required: true,
+      default: 0,
     },
     bedrooms: {
       type: Number,
