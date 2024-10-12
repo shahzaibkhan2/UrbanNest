@@ -151,49 +151,52 @@ const CreateHouseListing = () => {
         </section>
         <section className="flex flex-col flex-1 text-center">
           <div className="flex mb-4 text-md md:text-lg font-semibold text-blue-950">
-            <div className="flex justify-center items-center w-2/3 bg-yellow-200 h-40 text-wrap">
+            <div
+              onClick={handleClick}
+              className="flex justify-center items-center w-2/3 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
+            >
               Upload cover image
             </div>
-            <div className="flex justify-center items-center w-1/3 bg-yellow-100 h-40 text-wrap">
+            <div
+              onClick={handleClick}
+              className="flex justify-center items-center w-1/3 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
+            >
               Upload image 1
             </div>
           </div>
 
           <div className="flex  mb-4 gap-6">
             <input ref={imgOneRef} type="file" className="hidden" />
-            <BlueButton onClick={handleClick}>
-              Upload <HiOutlineUpload className="size-5" />
-            </BlueButton>
+
             <input ref={imgTwoRef} type="file" className="hidden" />
-            <BlueButton onClick={handleClick}>
-              Upload <HiOutlineUpload className="size-5" />
-            </BlueButton>
           </div>
 
           <div className="flex text-md md:text-lg font-semibold text-blue-950">
-            <div className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap">
+            <div
+              onClick={handleClick}
+              className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
+            >
               Upload image 2
             </div>
-            <div className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap">
+            <div
+              onClick={handleClick}
+              className="flex justify-center items-center w-1/2 bg-yellow-100 h-40 text-wrap cursor-pointer underline"
+            >
               Upload image 3
             </div>
-            <div className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap">
+            <div
+              onClick={handleClick}
+              className="flex justify-center items-center w-1/2 bg-yellow-200 h-40 text-wrap cursor-pointer underline"
+            >
               Upload image 4
             </div>
           </div>
           <div className="flex gap-6 mt-4">
             <input ref={imgThreeRef} type="file" className="hidden" />
-            <BlueButton onClick={handleClick}>
-              Upload <HiOutlineUpload className="size-5" />
-            </BlueButton>
+
             <input ref={imgFourRef} type="file" className="hidden" />
-            <BlueButton onClick={handleClick}>
-              Upload <HiOutlineUpload className="size-5" />
-            </BlueButton>
+
             <input ref={imgFiveRef} type="file" className="hidden" />
-            <BlueButton onClick={handleClick}>
-              Upload <HiOutlineUpload className="size-5" />
-            </BlueButton>
           </div>
         </section>
       </form>
