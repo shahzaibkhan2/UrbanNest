@@ -5,12 +5,14 @@ import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
 import { setAuthUser } from "../store/features/authSlice";
 import { MdOutlineDelete } from "react-icons/md";
-import { Heading } from "../components";
+import { BlueButton, Heading } from "../components";
 import {
   setFilterDeletedListings,
   setListingData,
 } from "../store/features/listingSlice";
-import { RiEditBoxLine } from "react-icons/ri";
+import { RiEditBoxLine, RiLogoutCircleRLine } from "react-icons/ri";
+import { MdOutlineNoAccounts } from "react-icons/md";
+import { IoListCircleOutline } from "react-icons/io5";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
@@ -105,87 +107,128 @@ const Profile = () => {
 
   return (
     <main>
-      <section className="p-10 xs:p-16">
-        <article className="p-8 bg-white shadow mt-24 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            <div className="relative">
-              <div className="size-28 xss:size-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
-                <img
-                  src={user?.user?.avatar}
-                  alt="profile-picture"
-                  className="rounded-full"
-                />
+      <section className="px-7">
+        <article className="h-full bg-gray-200 p-8">
+          <div className="bg-white rounded-lg shadow-xl pb-8">
+            <div className="w-full h-[250px]">
+              <img
+                src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
+                className="w-full h-full rounded-tl-lg rounded-tr-lg"
+              />
+            </div>
+            <div className="flex flex-col items-center -mt-20">
+              <img
+                src={user?.user?.avatar}
+                alt="avatar"
+                className="w-40 border-4 border-white rounded-full"
+              />
+              <div className="flex items-center space-x-2 mt-2">
+                <p className="text-2xl">{user?.user?.username}</p>
+                <span className="bg-blue-500 rounded-full p-1" title="Verified">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="text-gray-100 h-2.5 w-2.5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="4"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                </span>
+              </div>
+              <p className="text-gray-700">{user?.user?.email}</p>
+              <p className="text-sm text-gray-500">
+                {user?.user?.city}, {user?.user?.state}
+              </p>
+            </div>
+            <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-12">
+              <div className="flex items-center flex-wrap space-x-4 space-y-3 mt-2">
+                <Link to="/edit-profile" className="ml-4 mt-3">
+                  <button className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                    <RiEditBoxLine />
+                    Edit Profile
+                  </button>
+                </Link>
+                <button
+                  onClick={logoutProfileHandler}
+                  className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                >
+                  <RiLogoutCircleRLine />
+                  Delete Profile
+                </button>
+                <button
+                  onClick={deleteProfileHandler}
+                  className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                >
+                  <MdOutlineNoAccounts size={16} />
+                  Delete Profile
+                </button>
+                <button className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                  <IoListCircleOutline size={16} />
+                  Create List
+                </button>
               </div>
             </div>
-            <div className="space-x-0 xss:space-x-8 flex flex-col xss:flex-row gap-6 xss:gap-0 xss:justify-between mt-32 md:mt-0 md:justify-center pl-0 md:pl-32 lg:pl-0">
-              <Link to="/edit-profile">
-                <button className="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full xss:w-fit text-nowrap">
-                  Edit Profile
-                </button>
-              </Link>
-              <button
-                onClick={logoutProfileHandler}
-                className="text-white py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full xss:w-fit text-nowrap"
-              >
-                Logout
-              </button>
-            </div>
           </div>
-          <div className="mt-20 text-center border-b pb-12">
-            <label className="font-semibold text-md text-blue-900">Name</label>
-            <h1 className="text-4xl font-medium text-gray-700 capitalize">
-              {user?.user?.username}
-            </h1>
-            <div className="mt-8">
-              <label className="font-semibold text-md text-blue-900">
-                Email
-              </label>
-              <p className="font-light text-gray-600">{user?.user?.email}</p>
-            </div>
-            <div className="mt-8">
-              <label className="font-semibold text-md text-blue-900">
-                City
-              </label>
-              <p className="font-light text-gray-600">{user?.user?.city}</p>
-            </div>
-            <div className="mt-8">
-              <label className="font-semibold text-md text-blue-900">
-                State
-              </label>
-              <p className="font-light text-gray-600">{user?.user?.state}</p>
-            </div>
-            <div className="mt-8">
-              <label className="font-semibold text-md text-blue-900">Zip</label>
-              <p className="font-light text-gray-600">{user?.user?.zip}</p>
-            </div>
-          </div>
-          <div className="mt-12 w-full">
-            <div className="flex flex-col gap-6 mt-12 md:mt-0 mx-auto items-center">
-              <Link
-                to="/create-house-listing"
-                className="text-white py-2 px-4 uppercase rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap text-center text-xl"
-              >
-                <button>Create Post</button>
-              </Link>
 
-              <button
-                onClick={deleteProfileHandler}
-                className="text-white py-2 px-4 uppercase rounded bg-red-700 hover:bg-red-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap"
-              >
-                Delete Account
-              </button>
-              <button
-                onClick={getAllUserListingsHandler}
-                className="text-white py-2 px-4 uppercase rounded bg-blue-700 hover:bg-blue-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap"
-              >
-                Show House Listings
-              </button>
+          <div className="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
+            <div className="w-full flex flex-col 2xl:w-1/3">
+              <div className="flex-1 bg-white rounded-lg shadow-xl p-8">
+                <h4 className="text-xl text-gray-900 font-bold">
+                  Personal Info
+                </h4>
+                <ul className="mt-2 text-gray-700">
+                  <li className="flex border-y py-2">
+                    <span className="font-bold w-24">Full name:</span>
+                    <span className="text-gray-700">
+                      {user?.user?.username}
+                    </span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Joined:</span>
+                    <span className="text-gray-700">
+                      {new Date(user?.user?.createdAt).toLocaleDateString()}
+                    </span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Mobile:</span>
+                    <span className="text-gray-700">(123) 123-1234</span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Email:</span>
+                    <span className="text-gray-700">{user?.user?.email}</span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Location:</span>
+                    <span className="text-gray-700">
+                      {user?.user?.city}, {user?.user?.state}
+                    </span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Languages:</span>
+                    <span className="text-gray-700">English, Spanish</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </article>
       </section>
-      <Heading>Your Houses Listings</Heading>
+      <section className="mx-auto w-[12%] text-nowrap">
+        <button
+          onClick={getAllUserListingsHandler}
+          className="mx-auto w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition"
+        >
+          Show House Listings
+        </button>
+      </section>
       <section className="w-full p-16">
+        <Heading>Your Houses Listings</Heading>
         <article className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
           {listingData?.map((item) => (
             <div
