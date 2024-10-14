@@ -136,15 +136,14 @@ const CreateHouseListing = () => {
     formData.append("furnished", data.furnished);
     formData.append("offer", data.offer);
     formData.append("houseType", data.houseType);
-    formData.append("owner", user?.user?._id);
 
     // API Call
     try {
       const response = await axios.post(
         `${apiUri.baseUri}/${apiUri.houseListingUri}/create-listing`,
-        formData
+        formData,
+        { withCredentials: true }
       );
-      console.log(response.data.data);
 
       if (response.data.success) {
         dispatch(setListingData(response.data.data));

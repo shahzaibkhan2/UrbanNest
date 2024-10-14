@@ -13,7 +13,7 @@ import {
 import { RiEditBoxLine, RiLogoutCircleRLine } from "react-icons/ri";
 import { MdOutlineNoAccounts } from "react-icons/md";
 import { IoListCircleOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);

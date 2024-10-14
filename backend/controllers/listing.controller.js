@@ -19,7 +19,6 @@ const createListing = asyncHandler(async (req, res) => {
     furnished,
     offer,
     houseType,
-    owner,
   } = req.body;
 
   const imageFiles = req.files;
@@ -34,8 +33,7 @@ const createListing = asyncHandler(async (req, res) => {
     !parking ||
     !furnished ||
     !offer ||
-    !houseType ||
-    !owner
+    !houseType
   ) {
     throw new ApiError(
       401,
@@ -64,7 +62,7 @@ const createListing = asyncHandler(async (req, res) => {
     furnished,
     offer,
     houseType,
-    owner,
+    owner: req?.user?._id,
     houseImages: uploadImages,
   });
 

@@ -292,12 +292,12 @@ const deleteProfile = asyncHandler(async (req, res) => {
 
 // Get All User House Listings
 const getAllUserHouseListings = asyncHandler(async (req, res) => {
-  const userId = req?.user?._id.toString();
+  const userId = req?.user?._id;
   const id = req?.params?.id;
 
   const isUser = await User.findById(id);
 
-  if (userId !== isUser?._id.toString()) {
+  if (userId !== isUser?._id) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
@@ -323,12 +323,12 @@ const getAllUserHouseListings = asyncHandler(async (req, res) => {
 
 // Delete User House Listing
 const deleteUserHouseListing = asyncHandler(async (req, res) => {
-  const userId = req?.user?._id.toString();
+  const userId = req?.user?._id;
   const id = req?.params?.id;
 
   const isUser = await User.findById(id);
 
-  if (userId !== isUser?._id.toString()) {
+  if (userId !== isUser?._id) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 

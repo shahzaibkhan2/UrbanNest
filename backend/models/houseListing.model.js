@@ -47,7 +47,8 @@ const houseListingSchema = new Schema(
       required: true,
     },
     owner: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     houseImages: {

@@ -8,6 +8,6 @@ const router = Router();
 
 router
   .route("/create-listing")
-  .post(upload.array("houseImages[]", 5), createListing);
+  .post(upload.array("houseImages[]", 5), verifyJWT, createListing);
 
 export default router;
