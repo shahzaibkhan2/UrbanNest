@@ -7,6 +7,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import getDataUri from "../utils/dataUri.js";
 import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 // Generate Access Token
 const generateAccessToken = async (userId) => {
@@ -324,15 +325,15 @@ const deleteUserHouseListing = asyncHandler(async (req, res) => {
   const userId = req?.user?._id;
   const id = req?.params?.id;
 
-  const isUser = await User.findById(id);
+  const isUser = await HouseListing.findById(id);
 
-  if (userId !== isUser?._id) {
+  console.log(isUser?.owner, userId);
+
+  if (userId.equals(isUser?.owner)) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
-  const houseListing = await HouseListing.findByIdAndDelete({
-    owner: isUser?._id,
-  });
+  const houseListing = await HouseListing.findByIdAndDelete(id);
 
   if (!houseListing) {
     throw new ApiError(

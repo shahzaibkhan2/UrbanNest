@@ -20,6 +20,7 @@ const Profile = () => {
   const { listingData } = useSelector((state) => state.listing);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(listingData);
 
   const [showUserListings, setShowUserListings] = useState(false);
   // Delete Profile
@@ -85,10 +86,10 @@ const Profile = () => {
     }
   };
 
-  const deleteUserListingHandler = async (listingOwnerId) => {
+  const deleteUserListingHandler = async (listingId) => {
     try {
       const response = await axios.delete(
-        `${apiUri.baseUri}/${apiUri.usersUri}/delete-listing/${listingOwnerId}`,
+        `${apiUri.baseUri}/${apiUri.usersUri}/delete-listing/${listingId}`,
         { withCredentials: true }
       );
 
@@ -263,7 +264,7 @@ const Profile = () => {
                       Edit <RiEditBoxLine size={16} />
                     </button>
                     <button
-                      onClick={() => deleteUserListingHandler(item?.owner)}
+                      onClick={() => deleteUserListingHandler(item?._id)}
                       className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
                     >
                       Delete <MdOutlineDelete size={18} />
