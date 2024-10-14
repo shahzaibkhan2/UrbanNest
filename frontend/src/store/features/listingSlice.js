@@ -3,17 +3,24 @@ import { createSlice } from "@reduxjs/toolkit";
 const listingSlice = createSlice({
   name: "listing",
   initialState: {
-    listingData: [],
+    listingData: null,
   },
   reducers: {
     // setListingData: (state, action) => {
     //   state.listingData.push(action.payload);
     // },
     setListingData: (state, action) => {
-      state.listingData = [state.listingData, action.payload];
+      state.listingData = action.payload;
+    },
+
+    setFilterDeletedListings: (state, action) => {
+      state.listingData = state.listingData.filter(
+        (filtered) => filtered?.owner !== action.payload
+      );
     },
   },
 });
 
-export const { setListingData } = listingSlice.actions;
+export const { setListingData, setFilterDeletedListings } =
+  listingSlice.actions;
 export default listingSlice.reducer;

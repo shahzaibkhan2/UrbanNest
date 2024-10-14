@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { BlueButton } from "../components";
+import { BlueButton, Heading } from "../components";
 import { Loader2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -163,7 +163,7 @@ const CreateHouseListing = () => {
   return (
     <main className="mt-32 flex flex-col create-house-listing gap-16">
       <h1 className="text-center text-3xl font-semibold text-blue-900">
-        Create a House List
+        <Heading>Createa a House List</Heading>
       </h1>
       <form
         onSubmit={handleSubmit(submitFormHandler)}

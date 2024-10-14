@@ -1,7 +1,9 @@
 import { Router } from "express";
 import {
   deleteProfile,
+  deleteUserHouseListing,
   editProfile,
+  getAllUserHouseListings,
   googleSignIn,
   loginUser,
   logoutUser,
@@ -20,5 +22,7 @@ router
   .route("/edit-profile/:id")
   .post(verifyJWT, upload.single("avatar"), editProfile);
 router.route("/delete-profile/:id").delete(verifyJWT, deleteProfile);
+router.route("/get-listings/:id").get(verifyJWT, getAllUserHouseListings);
+router.route("/delete-listing/:id").delete(verifyJWT, deleteUserHouseListing);
 
 export default router;

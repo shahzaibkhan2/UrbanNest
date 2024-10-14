@@ -4,14 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
 import { setAuthUser } from "../store/features/authSlice";
-import house1 from "../assets/house1.jpg";
 import { MdOutlineDelete } from "react-icons/md";
+import { Heading } from "../components";
+import {
+  setFilterDeletedListings,
+  setListingData,
+} from "../store/features/listingSlice";
+import { RiEditBoxLine } from "react-icons/ri";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
+  const { listingData } = useSelector((state) => state.listing);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   // Delete Profile
   const deleteProfileHandler = async () => {
     try {
@@ -55,6 +60,49 @@ const Profile = () => {
       toast.error("Sorry !", error.message);
     }
   };
+
+  const getAllUserListingsHandler = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUri.baseUri}/${apiUri.usersUri}/get-listings/${user?.user?._id}`,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        dispatch(setListingData(response.data.data));
+        toast.success("House listings fetched successfully !");
+        // navigate("/auth");
+      } else {
+        toast.error(
+          "Sorry ! There is some issue and house listings could not be fetched."
+        );
+      }
+    } catch (error) {
+      toast.error("Sorry !", error.message);
+    }
+  };
+
+  const deleteUserListingHandler = async (listingOwnerId) => {
+    try {
+      const response = await axios.delete(
+        `${apiUri.baseUri}/${apiUri.usersUri}/delete-listing/${listingOwnerId}`,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        dispatch(setFilterDeletedListings(user?.user?._id));
+        toast.success("House listing deleted successfully !");
+        // navigate("/auth");
+      } else {
+        toast.error(
+          "Sorry ! There is some issue and house listing could not be deleted."
+        );
+      }
+    } catch (error) {
+      toast.error("Sorry !", error.message);
+    }
+  };
+
   return (
     <main>
       <section className="p-10 xs:p-16">
@@ -126,30 +174,52 @@ const Profile = () => {
               >
                 Delete Account
               </button>
+              <button
+                onClick={getAllUserListingsHandler}
+                className="text-white py-2 px-4 uppercase rounded bg-blue-700 hover:bg-blue-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 w-full sm:w-1/2 text-nowrap"
+              >
+                Show House Listings
+              </button>
             </div>
           </div>
         </article>
       </section>
+      <Heading>Your Houses Listings</Heading>
       <section className="w-full p-16">
-        <article className="flex gap-x-6 gap-y-16 flex-wrap w-full items-center justify-between">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <article className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
+          {listingData?.map((item) => (
+            <div
+              key={item?._id}
+              className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+            >
               <Link to="#">
-                <img className="rounded-t-lg" src={house1} alt="house-image" />
+                <img
+                  className="rounded-t-lg object-cover w-full"
+                  src={item?.houseImages[0]}
+                  alt="house-image"
+                />
               </Link>
               <div className="p-5">
                 <Link to="#">
                   <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    Noteworthy technology acquisitions 2021
+                    {item?.title}
                   </h5>
                 </Link>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
                   Here are the biggest enterprise technology acquisitions of
                   2021 so far, in reverse chronological order.
                 </p>
-                <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                  Delete <MdOutlineDelete size={18} />
-                </button>
+                <div className="flex items-center justify-between">
+                  <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Edit <RiEditBoxLine size={16} />
+                  </button>
+                  <button
+                    onClick={() => deleteUserListingHandler(item?.owner)}
+                    className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                  >
+                    Delete <MdOutlineDelete size={18} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}

@@ -1,4 +1,5 @@
 import { httpOptions } from "../constants.js";
+import { HouseListing } from "../models/houseListing.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -289,6 +290,64 @@ const deleteProfile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "Profile deleted successfully !"));
 });
 
+// Get All User House Listings
+const getAllUserHouseListings = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id.toString();
+  const id = req?.params?.id;
+
+  const isUser = await User.findById(id);
+
+  if (userId !== isUser?._id.toString()) {
+    throw new ApiError(401, "Sorry ! Invalid profile ID.");
+  }
+
+  const houseListings = await HouseListing.find({ owner: isUser?._id });
+
+  if (!houseListings) {
+    throw new ApiError(
+      500,
+      "Sorry ! House listing could not be fetched due to some internal server error."
+    );
+  }
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        houseListings,
+        "House listings fetched successfully !"
+      )
+    );
+});
+
+// Delete User House Listing
+const deleteUserHouseListing = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id.toString();
+  const id = req?.params?.id;
+
+  const isUser = await User.findById(id);
+
+  if (userId !== isUser?._id.toString()) {
+    throw new ApiError(401, "Sorry ! Invalid profile ID.");
+  }
+
+  const houseListing = await HouseListing.findByIdAndDelete({
+    owner: isUser?._id,
+  });
+
+  if (!houseListing) {
+    throw new ApiError(
+      500,
+      "Sorry ! House listing could not be deleted due to some internal server error."
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "House listings fetched successfully !"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -297,4 +356,6 @@ export {
   getUserProfile,
   editProfile,
   deleteProfile,
+  getAllUserHouseListings,
+  deleteUserHouseListing,
 };
