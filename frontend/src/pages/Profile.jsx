@@ -13,7 +13,7 @@ import {
 import { RiEditBoxLine, RiLogoutCircleRLine } from "react-icons/ri";
 import { MdOutlineNoAccounts } from "react-icons/md";
 import { IoListCircleOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
@@ -105,6 +105,10 @@ const Profile = () => {
       toast.error("Sorry !", error.message);
     }
   };
+
+  useEffect(() => {
+    getAllUserListings();
+  }, []);
 
   return (
     <main className="mt-20">

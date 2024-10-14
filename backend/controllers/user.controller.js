@@ -295,13 +295,11 @@ const getAllUserHouseListings = asyncHandler(async (req, res) => {
   const userId = req?.user?._id;
   const id = req?.params?.id;
 
-  const isUser = await User.findById(id);
-
-  if (userId !== isUser?._id) {
+  if (userId.toString() !== id) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
-  const houseListings = await HouseListing.find({ owner: isUser?._id });
+  const houseListings = await HouseListing.find({ owner: id });
 
   if (!houseListings) {
     throw new ApiError(

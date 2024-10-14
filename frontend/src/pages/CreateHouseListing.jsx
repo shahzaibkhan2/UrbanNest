@@ -146,7 +146,6 @@ const CreateHouseListing = () => {
       );
 
       if (response.data.success) {
-        dispatch(setListingData(response.data.data));
         toast.success("House listing created successfully !");
         // navigate("/profile");
       } else {
