@@ -124,7 +124,7 @@ const Profile = () => {
                 className="w-40 border-4 border-white rounded-full"
               />
               <div className="flex items-center space-x-2 mt-2">
-                <p className="text-2xl">{user?.user?.username}</p>
+                <p className="text-2xl capitalize">{user?.user?.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -150,26 +150,26 @@ const Profile = () => {
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-12">
               <div className="flex items-center flex-wrap space-x-4 space-y-3 mt-2">
                 <Link to="/edit-profile" className="ml-4 mt-3">
-                  <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                  <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg">
                     <RiEditBoxLine />
                     Edit Profile
                   </button>
                 </Link>
                 <button
                   onClick={logoutProfileHandler}
-                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg"
                 >
                   <RiLogoutCircleRLine />
                   Delete Profile
                 </button>
                 <button
                   onClick={deleteProfileHandler}
-                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg"
                 >
                   <MdOutlineNoAccounts size={16} />
                   Delete Profile
                 </button>
-                <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg">
                   <IoListCircleOutline size={16} />
                   Create List
                 </button>
@@ -186,7 +186,7 @@ const Profile = () => {
                 <ul className="mt-2 text-gray-700">
                   <li className="flex border-y py-2">
                     <span className="font-bold w-24">Full name:</span>
-                    <span className="text-gray-700">
+                    <span className="text-gray-700 capitalize">
                       {user?.user?.username}
                     </span>
                   </li>
@@ -225,7 +225,7 @@ const Profile = () => {
           onClick={() => setShowUserListings((prev) => !prev)}
           className="mx-auto w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition py-10"
         >
-          Show House Listings
+          {showUserListings ? "Hide House Listings" : "Show house listings"}
         </button>
       </section>
       {showUserListings && (
