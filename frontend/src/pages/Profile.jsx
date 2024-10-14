@@ -5,7 +5,7 @@ import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
 import { setAuthUser } from "../store/features/authSlice";
 import { MdOutlineDelete } from "react-icons/md";
-import { BlueButton, Heading } from "../components";
+import { Heading } from "../components";
 import {
   setFilterDeletedListings,
   setListingData,
@@ -13,12 +13,15 @@ import {
 import { RiEditBoxLine, RiLogoutCircleRLine } from "react-icons/ri";
 import { MdOutlineNoAccounts } from "react-icons/md";
 import { IoListCircleOutline } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
   const { listingData } = useSelector((state) => state.listing);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [showUserListings, setShowUserListings] = useState(false);
   // Delete Profile
   const deleteProfileHandler = async () => {
     try {
@@ -63,7 +66,7 @@ const Profile = () => {
     }
   };
 
-  const getAllUserListingsHandler = async () => {
+  const getAllUserListings = async () => {
     try {
       const response = await axios.get(
         `${apiUri.baseUri}/${apiUri.usersUri}/get-listings/${user?.user?._id}`,
@@ -72,8 +75,6 @@ const Profile = () => {
 
       if (response.data.success) {
         dispatch(setListingData(response.data.data));
-        toast.success("House listings fetched successfully !");
-        // navigate("/auth");
       } else {
         toast.error(
           "Sorry ! There is some issue and house listings could not be fetched."
@@ -106,7 +107,7 @@ const Profile = () => {
   };
 
   return (
-    <main>
+    <main className="mt-20">
       <section className="px-7">
         <article className="h-full bg-gray-200 p-8">
           <div className="bg-white rounded-lg shadow-xl pb-8">
@@ -149,26 +150,26 @@ const Profile = () => {
             <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-12">
               <div className="flex items-center flex-wrap space-x-4 space-y-3 mt-2">
                 <Link to="/edit-profile" className="ml-4 mt-3">
-                  <button className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                  <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
                     <RiEditBoxLine />
                     Edit Profile
                   </button>
                 </Link>
                 <button
                   onClick={logoutProfileHandler}
-                  className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
                 >
                   <RiLogoutCircleRLine />
                   Delete Profile
                 </button>
                 <button
                   onClick={deleteProfileHandler}
-                  className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
+                  className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5"
                 >
                   <MdOutlineNoAccounts size={16} />
                   Delete Profile
                 </button>
-                <button className="flex gap-1 items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
+                <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5">
                   <IoListCircleOutline size={16} />
                   Create List
                 </button>
@@ -221,53 +222,55 @@ const Profile = () => {
       </section>
       <section className="mx-auto w-[12%] text-nowrap">
         <button
-          onClick={getAllUserListingsHandler}
-          className="mx-auto w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition"
+          onClick={() => setShowUserListings((prev) => !prev)}
+          className="mx-auto w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition py-10"
         >
           Show House Listings
         </button>
       </section>
-      <section className="w-full p-16">
-        <Heading>Your Houses Listings</Heading>
-        <article className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
-          {listingData?.map((item) => (
-            <div
-              key={item?._id}
-              className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-            >
-              <Link to="#">
-                <img
-                  className="rounded-t-lg object-cover w-full"
-                  src={item?.houseImages[0]}
-                  alt="house-image"
-                />
-              </Link>
-              <div className="p-5">
+      {showUserListings && (
+        <section className="w-full p-16">
+          <Heading>Your Houses Listings</Heading>
+          <article className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
+            {listingData?.map((item) => (
+              <div
+                key={item?._id}
+                className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+              >
                 <Link to="#">
-                  <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    {item?.title}
-                  </h5>
+                  <img
+                    className="rounded-t-lg object-cover w-full"
+                    src={item?.houseImages[0]}
+                    alt="house-image"
+                  />
                 </Link>
-                <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  Here are the biggest enterprise technology acquisitions of
-                  2021 so far, in reverse chronological order.
-                </p>
-                <div className="flex items-center justify-between">
-                  <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Edit <RiEditBoxLine size={16} />
-                  </button>
-                  <button
-                    onClick={() => deleteUserListingHandler(item?.owner)}
-                    className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                  >
-                    Delete <MdOutlineDelete size={18} />
-                  </button>
+                <div className="p-5">
+                  <Link to="#">
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                      {item?.title}
+                    </h5>
+                  </Link>
+                  <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                    Here are the biggest enterprise technology acquisitions of
+                    2021 so far, in reverse chronological order.
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <button className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                      Edit <RiEditBoxLine size={16} />
+                    </button>
+                    <button
+                      onClick={() => deleteUserListingHandler(item?.owner)}
+                      className="flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                      Delete <MdOutlineDelete size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </article>
-      </section>
+            ))}
+          </article>
+        </section>
+      )}
     </main>
   );
 };
