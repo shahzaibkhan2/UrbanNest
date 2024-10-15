@@ -15,15 +15,15 @@ let persistor = persistStore(mainStore);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={mainStore}>
-      <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
+    <BrowserRouter>
+      <Provider store={mainStore}>
+        <PersistGate loading={null} persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
             <Toaster />
             <App />
-          </BrowserRouter>
-        </QueryClientProvider>
-      </PersistGate>
-    </Provider>
+          </QueryClientProvider>
+        </PersistGate>
+      </Provider>
+    </BrowserRouter>
   </StrictMode>
 );

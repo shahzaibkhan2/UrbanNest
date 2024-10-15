@@ -6,10 +6,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
+import { useProfileContext } from "../hooks/useProfile";
 
 const EditHouseListing = () => {
   const navigate = useNavigate();
   const { listingId } = useParams();
+  const { tempPush } = useProfileContext();
 
   // States
   const [selectedImage, setSelectedImage] = useState({
@@ -172,6 +174,7 @@ const EditHouseListing = () => {
           <div className="flex flex-col gap-3 mb-6">
             <div className="w-full">
               <label
+                onClick={tempPush}
                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="title"
               >
