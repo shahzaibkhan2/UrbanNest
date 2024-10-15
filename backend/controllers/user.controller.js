@@ -7,7 +7,6 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import getDataUri from "../utils/dataUri.js";
 import bcrypt from "bcrypt";
-import mongoose from "mongoose";
 
 // Generate Access Token
 const generateAccessToken = async (userId) => {

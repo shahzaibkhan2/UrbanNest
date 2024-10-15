@@ -1,16 +1,14 @@
 import React, { useRef, useState } from "react";
 import { BlueButton, Heading } from "../components";
 import { Loader2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { apiUri } from "../constants/apiRoutes";
 import axios from "axios";
-import { setListingData } from "../store/features/listingSlice";
 
 const CreateHouseListing = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
 

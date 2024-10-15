@@ -6,9 +6,6 @@ const listingSlice = createSlice({
     listingData: null,
   },
   reducers: {
-    // setListingData: (state, action) => {
-    //   state.listingData.push(action.payload);
-    // },
     setListingData: (state, action) => {
       state.listingData = action.payload;
     },
