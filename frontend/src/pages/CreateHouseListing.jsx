@@ -147,7 +147,7 @@ const CreateHouseListing = () => {
 
       if (response.data.success) {
         toast.success("House listing created successfully !");
-        // navigate("/profile");
+        navigate("/profile");
       } else {
         toast.error("Sorry ! There is some issue with the form submission.");
       }
@@ -270,7 +270,7 @@ const CreateHouseListing = () => {
                 {...register("parking")}
               />
               <span className="text-md text-blue-900 font-semibold">
-                Parking Garrage
+                Parking Garage
               </span>
             </div>
             <div className="flex gap-2">
@@ -403,7 +403,7 @@ const CreateHouseListing = () => {
                   className="object-cover size-full overflow-hidden"
                 />
               ) : (
-                "Choose cover image"
+                "Front side image"
               )}
             </div>
             <div
@@ -421,7 +421,7 @@ const CreateHouseListing = () => {
                   className="object-cover size-full overflow-hidden"
                 />
               ) : (
-                "Choose image 1"
+                "Left side image"
               )}
             </div>
           </div>
@@ -460,7 +460,7 @@ const CreateHouseListing = () => {
                   className="object-cover size-full overflow-hidden"
                 />
               ) : (
-                "Choose image 2"
+                "Right side image"
               )}
             </div>
             <div
@@ -478,7 +478,7 @@ const CreateHouseListing = () => {
                   className="object-cover size-full overflow-hidden"
                 />
               ) : (
-                "Choose image 3"
+                "Top side image"
               )}
             </div>
             <div
@@ -496,7 +496,7 @@ const CreateHouseListing = () => {
                   className="object-cover size-full overflow-hidden"
                 />
               ) : (
-                "Choose image 4"
+                "Corner side image"
               )}
             </div>
           </div>
