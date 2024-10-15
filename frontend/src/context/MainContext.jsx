@@ -24,6 +24,7 @@ const MainContextProvider = ({ children }) => {
     imageFourPreview: null,
   });
   const [showDiscount, setShowDiscount] = useState(false);
+  const [listingParam, setListingParam] = useState(null);
 
   // <===================================== Refs =======================================>
 
@@ -141,7 +142,7 @@ const MainContextProvider = ({ children }) => {
     // API Call
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingId}`,
+        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingParam}`,
         formData,
         { withCredentials: true }
       );
@@ -172,6 +173,7 @@ const MainContextProvider = ({ children }) => {
     imgTwoRef,
     imgThreeRef,
     imgFourRef,
+    setListingParam,
   };
 
   return (
