@@ -1,110 +1,23 @@
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { apiUri } from "../constants/apiRoutes";
-import { toast } from "sonner";
-import { setAuthUser } from "../store/features/authSlice";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { MdOutlineDelete } from "react-icons/md";
 import { Heading } from "../components";
-import {
-  setFilterDeletedListings,
-  setListingData,
-} from "../store/features/listingSlice";
 import { RiEditBoxLine, RiLogoutCircleRLine } from "react-icons/ri";
 import { MdOutlineNoAccounts } from "react-icons/md";
 import { IoListCircleOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useProfileContext } from "../hooks/useProfileContext";
 
 const Profile = () => {
+  const {
+    deleteProfileHandler,
+    logoutProfileHandler,
+    getAllUserListings,
+    deleteUserListingHandler,
+    showUserListings,
+    setShowUserListings,
+  } = useProfileContext();
   const { user } = useSelector((state) => state.auth);
   const { listingData } = useSelector((state) => state.listing);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [showUserListings, setShowUserListings] = useState(false);
-  // Delete Profile
-  const deleteProfileHandler = async () => {
-    try {
-      const response = await axios.delete(
-        `${apiUri.baseUri}/${apiUri.usersUri}/delete-profile/${user?.user?._id}`,
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        dispatch(setAuthUser(null));
-        toast.success("Profile Deleted successfully !");
-        navigate("/auth");
-      } else {
-        toast.error(
-          "Sorry ! There is some issue and profile could not be deleted."
-        );
-      }
-    } catch (error) {
-      toast.error("Sorry !", error.message);
-    }
-  };
-
-  // Logout
-  const logoutProfileHandler = async () => {
-    try {
-      const response = await axios.get(
-        `${apiUri.baseUri}/${apiUri.usersUri}/logout`,
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        dispatch(setAuthUser(null));
-        toast.success("Profile logged out successfully !");
-        navigate("/auth");
-      } else {
-        toast.error(
-          "Sorry ! There is some issue and profile could not be logged out."
-        );
-      }
-    } catch (error) {
-      toast.error("Sorry !", error.message);
-    }
-  };
-
-  const getAllUserListings = async () => {
-    try {
-      const response = await axios.get(
-        `${apiUri.baseUri}/${apiUri.usersUri}/get-listings/${user?.user?._id}`,
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        dispatch(setListingData(response.data.data));
-      } else {
-        toast.error(
-          "Sorry ! There is some issue and house listings could not be fetched."
-        );
-      }
-    } catch (error) {
-      toast.error("Sorry !", error.message);
-    }
-  };
-
-  const deleteUserListingHandler = async (listingId) => {
-    try {
-      const response = await axios.delete(
-        `${apiUri.baseUri}/${apiUri.usersUri}/delete-listing/${listingId}`,
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        dispatch(setFilterDeletedListings(user?.user?._id));
-        toast.success("House listing deleted successfully !");
-        // navigate("/auth");
-      } else {
-        toast.error(
-          "Sorry ! There is some issue and house listing could not be deleted."
-        );
-      }
-    } catch (error) {
-      toast.error("Sorry !", error.message);
-    }
-  };
 
   return (
     <main className="mt-20">

@@ -168,7 +168,7 @@ const MainContextProvider = ({ children }) => {
     }
   };
 
-  const profileContextValues = {
+  const mainContextValues = {
     selectedImage,
     showDiscount,
     setShowDiscount,
@@ -187,7 +187,7 @@ const MainContextProvider = ({ children }) => {
   };
 
   return (
-    <MainContext.Provider value={profileContextValues}>
+    <MainContext.Provider value={mainContextValues}>
       {children}
     </MainContext.Provider>
   );
