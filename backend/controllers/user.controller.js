@@ -215,11 +215,11 @@ const editProfile = asyncHandler(async (req, res) => {
   const { username, email, password, city, state, zip } = req.body;
   const profilePicture = req.file;
 
-  if (userId !== id) {
+  if (userId.toString() !== id) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
-  const isUser = await User.findById(userId);
+  const isUser = await User.findById(id);
 
   if (!isUser) {
     throw new ApiError(401, "Access token is either expired or invalid email.");
@@ -236,7 +236,7 @@ const editProfile = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const updateUser = await User.findByIdAndUpdate(
-    userId,
+    id,
     {
       $set: {
         username,

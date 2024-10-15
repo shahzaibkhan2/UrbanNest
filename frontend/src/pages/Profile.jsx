@@ -20,7 +20,7 @@ const Profile = () => {
   const { listingData } = useSelector((state) => state.listing);
 
   return (
-    <main className="mt-20">
+    <main className="mt-20 px-[3%]">
       <section className="px-7">
         <article className="h-full bg-gray-200 p-8">
           <div className="bg-white rounded-lg shadow-xl pb-8">
@@ -31,11 +31,13 @@ const Profile = () => {
               />
             </div>
             <div className="flex flex-col items-center -mt-20">
-              <img
-                src={user?.user?.avatar}
-                alt="avatar"
-                className="w-40 border-4 border-white rounded-full"
-              />
+              <div className="size-40">
+                <img
+                  src={user?.user?.avatar}
+                  alt="avatar"
+                  className="size-full border-4 border-white rounded-full object-cover"
+                />
+              </div>
               <div className="flex items-center space-x-2 mt-2">
                 <p className="text-2xl capitalize">{user?.user?.username}</p>
                 <span className="bg-blue-500 rounded-full p-1" title="Verified">

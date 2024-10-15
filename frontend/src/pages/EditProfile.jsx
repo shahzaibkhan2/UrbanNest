@@ -8,63 +8,76 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setAuthUser } from "../store/features/authSlice";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { useProfileContext } from "../hooks/useProfileContext";
 
 const EditProfile = () => {
   const { user } = useSelector((state) => state.auth);
-  const profilePicRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState({
-    preview: null,
-    imageUrl: null,
-  });
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const {
+    selectedImage,
+    setSelectedImage,
+    profilePicRef,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    isSubmitting,
+    errors,
+    handleImageChange,
+    editProfileHandler,
+  } = useProfileContext();
 
-  // Handle image upload
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage({ imageUrl: file, preview: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const profilePicRef = useRef(null);
+  // const [selectedImage, setSelectedImage] = useState({
+  //   preview: null,
+  //   imageUrl: null,
+  // });
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors, isSubmitting },
+  // } = useForm();
 
-  // Edit Profile
-  const editProfileHandler = async (data) => {
-    const formData = new FormData();
-    formData.append("avatar", selectedImage.imageUrl);
-    formData.append("username", data.username);
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("city", data.city);
-    formData.append("state", data.state);
-    formData.append("zip", data.zip);
+  // // Handle image upload
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setSelectedImage({ imageUrl: file, preview: reader.result });
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
-    try {
-      const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile/${user?.user?._id}`,
-        formData,
-        { withCredentials: true }
-      );
+  // // Edit Profile
+  // const editProfileHandler = async (data) => {
+  //   const formData = new FormData();
+  //   formData.append("avatar", selectedImage.imageUrl);
+  //   formData.append("username", data.username);
+  //   formData.append("email", data.email);
+  //   formData.append("password", data.password);
+  //   formData.append("city", data.city);
+  //   formData.append("state", data.state);
+  //   formData.append("zip", data.zip);
 
-      if (response.data.success) {
-        dispatch(setAuthUser(response.data.data));
-        toast.success("Profile updated successfully !");
-        navigate("/profile");
-      } else {
-        toast.error("Sorry ! There is some issue with the form submission.");
-      }
-    } catch (error) {
-      toast.error("Sorry !", error.message);
-    }
-  };
+  //   try {
+  //     const response = await axios.post(
+  //       `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile/${user?.user?._id}`,
+  //       formData,
+  //       { withCredentials: true }
+  //     );
+
+  //     if (response.data.success) {
+  //       dispatch(setAuthUser(response.data.data));
+  //       toast.success("Profile updated successfully !");
+  //       navigate("/profile");
+  //     } else {
+  //       toast.error("Sorry ! There is some issue with the form submission.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Sorry !", error.message);
+  //   }
+  // };
 
   return (
     <div className="w-full mt-32 px-10">
@@ -101,7 +114,7 @@ const EditProfile = () => {
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-name"
+              htmlFor="username"
             >
               Name
             </label>
@@ -109,7 +122,7 @@ const EditProfile = () => {
               className={`appearance-none block w-full bg-yellow-100 text-blue-900 border ${
                 errors?.name?.message ? "border-red-500" : "border-yellow-100"
               } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white`}
-              id="grid-username"
+              id="username"
               type="text"
               placeholder={user?.user?.username || "Jhon"}
               name="username"
@@ -133,7 +146,7 @@ const EditProfile = () => {
           <div className="w-full md:w-1/2 px-3">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-email"
+              htmlFor="email"
             >
               Email
             </label>
@@ -141,7 +154,7 @@ const EditProfile = () => {
               className={`appearance-none block w-full bg-yellow-100 text-blue-900 ${
                 errors?.email?.message ? "border-red-500" : "border-yellow-100"
               } border rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-              id="grid-email"
+              id="email"
               type="email"
               name="email"
               placeholder={user?.user?.email || "Jhon@example.com"}
@@ -164,7 +177,7 @@ const EditProfile = () => {
           <div className="w-full px-3">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-password"
+              htmlFor="password"
             >
               Password
             </label>
@@ -174,7 +187,7 @@ const EditProfile = () => {
                   ? "border-red-500"
                   : "border-yellow-100"
               } rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-              id="grid-password"
+              id="password"
               type="password"
               name="password"
               placeholder="******************"
@@ -202,7 +215,7 @@ const EditProfile = () => {
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-city"
+              htmlFor="city"
             >
               City
             </label>
@@ -210,7 +223,7 @@ const EditProfile = () => {
               className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
                 errors?.city?.message ? "border-red-500" : "border-yellow-100"
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-              id="grid-city"
+              id="city"
               type="text"
               placeholder={user?.user?.city || "New York"}
               name="city"
@@ -233,7 +246,7 @@ const EditProfile = () => {
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-state"
+              htmlFor="state"
             >
               State
             </label>
@@ -245,7 +258,7 @@ const EditProfile = () => {
                     ? "border-red-500"
                     : "border-yellow-100"
                 } text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-                id="grid-state"
+                id="state"
                 {...register("state", {
                   minLength: {
                     value: 3,
@@ -280,7 +293,7 @@ const EditProfile = () => {
           <div className="w-full md:w-1/3 px-3 mb-6 md:mb-0">
             <label
               className="block uppercase tracking-wide text-blue-900 text-xs font-bold mb-2"
-              for="grid-zip"
+              htmlFor="zip"
             >
               Zip
             </label>
@@ -288,7 +301,7 @@ const EditProfile = () => {
               className={`appearance-none block w-full bg-yellow-100 text-gray-700 border ${
                 errors?.zip?.message ? "border-red-500" : "border-yellow-100"
               } rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500`}
-              id="grid-zip"
+              id="zip"
               type="number"
               placeholder={user?.user?.zip || "93102"}
               name="zip"

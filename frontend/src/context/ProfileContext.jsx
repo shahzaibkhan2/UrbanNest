@@ -21,12 +21,22 @@ const ProfileContextProvider = ({ children }) => {
   // <========================== States ===========================>
 
   const [showUserListings, setShowUserListings] = useState(false);
+  const [selectedImage, setSelectedImage] = useState({
+    preview: null,
+    imageUrl: null,
+  });
 
   // <===================================== Refs =======================================>
 
+  const profilePicRef = useRef(null);
   // <============================= Custom Variables and Logics =========================>
 
   // React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
   // <============================= Handlers and Methods/Functions =========================>
 
@@ -116,9 +126,47 @@ const ProfileContextProvider = ({ children }) => {
     }
   };
 
-  // Handle Click on div to recieve input
-
   // Handle image upload
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage({ imageUrl: file, preview: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Edit Profile Handler
+  const editProfileHandler = async (data) => {
+    const formData = new FormData();
+    formData.append("avatar", selectedImage.imageUrl);
+    formData.append("username", data.username);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("city", data.city);
+    formData.append("state", data.state);
+    formData.append("zip", data.zip);
+
+    try {
+      const response = await axios.post(
+        `${apiUri.baseUri}/${apiUri.usersUri}/edit-profile/${user?.user?._id}`,
+        formData,
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        dispatch(setAuthUser(response.data.data));
+        toast.success("Profile updated successfully !");
+        navigate("/profile");
+      } else {
+        toast.error("Sorry ! There is some issue with the form submission.");
+      }
+    } catch (error) {
+      toast.error("Sorry !", error.message);
+    }
+  };
 
   // Endpoint
 
@@ -131,6 +179,15 @@ const ProfileContextProvider = ({ children }) => {
     deleteUserListingHandler,
     showUserListings,
     setShowUserListings,
+    selectedImage,
+    setSelectedImage,
+    profilePicRef,
+    register,
+    handleSubmit,
+    isSubmitting,
+    errors,
+    handleImageChange,
+    editProfileHandler,
   };
 
   return (
