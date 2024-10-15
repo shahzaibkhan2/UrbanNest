@@ -95,6 +95,7 @@ const Profile = () => {
 
       if (response.data.success) {
         dispatch(setFilterDeletedListings(user?.user?._id));
+        getAllUserListings();
         toast.success("House listing deleted successfully !");
         // navigate("/auth");
       } else {
@@ -174,10 +175,12 @@ const Profile = () => {
                   <MdOutlineNoAccounts size={16} />
                   Delete Profile
                 </button>
-                <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg">
-                  <IoListCircleOutline size={16} />
-                  Create List
-                </button>
+                <Link to="/create-listing">
+                  <button className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg">
+                    <IoListCircleOutline size={16} />
+                    Create List
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

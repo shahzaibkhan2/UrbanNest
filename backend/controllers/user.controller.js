@@ -327,9 +327,7 @@ const deleteUserHouseListing = asyncHandler(async (req, res) => {
 
   const isUser = await HouseListing.findById(id);
 
-  console.log(isUser?.owner, userId);
-
-  if (userId.equals(isUser?.owner)) {
+  if (!userId.equals(isUser?.owner)) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");
   }
 
