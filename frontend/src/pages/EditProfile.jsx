@@ -259,13 +259,13 @@ const EditProfile = () => {
                   },
                 })}
               >
-                <p className="text-red-500 text-xs italic">
-                  {errors && errors?.state?.message}
-                </p>
                 <option>{user?.user?.state || "New York"}</option>
                 <option>California</option>
                 <option>Mexico</option>
               </select>
+              <p className="text-red-500 text-xs italic">
+                {errors && errors?.state?.message}
+              </p>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
                   className="fill-current h-4 w-4"

@@ -106,10 +106,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    getAllUserListings();
-  }, []);
-
   return (
     <main className="mt-20">
       <section className="px-7">
@@ -164,7 +160,7 @@ const Profile = () => {
                   className="flex gap-1 items-center bg-blue-900 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition transform hover:-translate-y-0.5 shadow-lg"
                 >
                   <RiLogoutCircleRLine />
-                  Delete Profile
+                  Logout
                 </button>
                 <button
                   onClick={deleteProfileHandler}
@@ -226,10 +222,13 @@ const Profile = () => {
           </div>
         </article>
       </section>
-      <section className="mx-auto w-[12%] text-nowrap">
+      <section className="ml-16 md:mx-auto w-[12%] text-nowrap">
         <button
-          onClick={() => setShowUserListings((prev) => !prev)}
-          className="mx-auto w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition py-10"
+          onClick={() => {
+            if (showUserListings === false) getAllUserListings();
+            setShowUserListings((prev) => !prev);
+          }}
+          className="w-fit font-semibold text-xl text-blue-900 underline hover:text-blue-950 hover:no-underline duration-300 transition py-10"
         >
           {showUserListings ? "Hide House Listings" : "Show house listings"}
         </button>
