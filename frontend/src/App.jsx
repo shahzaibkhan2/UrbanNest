@@ -1,5 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import { About, CreateHouseListing, Home, Login, Profile } from "./pages";
+import {
+  About,
+  CreateHouseListing,
+  EditHouseListing,
+  Home,
+  Login,
+  Profile,
+} from "./pages";
 import { Navbar, PrivateProfileRoute } from "./components";
 import EditProfile from "./pages/EditProfile";
 const App = () => {
@@ -13,6 +20,7 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/create-listing" element={<CreateHouseListing />} />
+          <Route path="/edit-listing" element={<EditHouseListing />} />
         </Route>
         <Route path="/about" element={<About />} />
       </Routes>

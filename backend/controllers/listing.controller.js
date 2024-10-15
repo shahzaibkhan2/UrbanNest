@@ -84,4 +84,91 @@ const createListing = asyncHandler(async (req, res) => {
     );
 });
 
-export { createListing };
+// Update User House Listing
+const editUserHouseListing = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id;
+  const id = req?.params?.id;
+  const {
+    title,
+    description,
+    address,
+    normalPrice,
+    discountPrice,
+    bedrooms,
+    bathrooms,
+    parking,
+    furnished,
+    offer,
+    houseType,
+  } = req.body;
+
+  const imageFiles = req.files;
+
+  if (
+    !title ||
+    !description ||
+    !address ||
+    !normalPrice ||
+    !bedrooms ||
+    !bathrooms ||
+    !parking ||
+    !furnished ||
+    !offer ||
+    !houseType
+  ) {
+    throw new ApiError(
+      401,
+      "Some fields are missing. All fields are required."
+    );
+  }
+
+  const isUser = await HouseListing.findById(id);
+  console.log(userId, " ----", isUser.owner);
+
+  if (!userId.equals(isUser?.owner)) {
+    throw new ApiError(401, "Sorry ! Invalid profile ID.");
+  }
+
+  const uploadPromises = await imageFiles?.map(async (file) => {
+    const fileUri = getDataUri(file);
+    return await uploadOnCloudinary(fileUri);
+  });
+
+  const uploadResponses = await Promise.all(uploadPromises);
+
+  const uploadImages = uploadResponses.map((res) => res.secure_url);
+
+  const houseListing = await HouseListing.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        title,
+        description,
+        address,
+        normalPrice,
+        discountPrice: discountPrice || 0,
+        bedrooms,
+        bathrooms,
+        parking,
+        furnished,
+        offer,
+        houseType,
+        houseImages: uploadImages,
+      },
+    },
+    { new: true }
+  );
+
+  if (!houseListing) {
+    throw new ApiError(
+      500,
+      "Sorry ! House listing could not be updated due to some internal server error."
+    );
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "House listing updated successfully !"));
+});
+
+export { createListing, editUserHouseListing };
