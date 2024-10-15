@@ -9,11 +9,11 @@ import {
 } from "./pages";
 import { Navbar, PrivateProfileRoute } from "./components";
 import EditProfile from "./pages/EditProfile";
-import ProfileContextProvider from "./context/ProfileContext";
+import MainContextProvider from "./context/MainContext";
 const App = () => {
   return (
     <>
-      <ProfileContextProvider>
+      <MainContextProvider>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -29,7 +29,7 @@ const App = () => {
           </Route>
           <Route path="/about" element={<About />} />
         </Routes>
-      </ProfileContextProvider>
+      </MainContextProvider>
     </>
   );
 };

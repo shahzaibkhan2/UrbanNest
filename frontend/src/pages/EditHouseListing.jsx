@@ -6,158 +6,175 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
-import { useProfileContext } from "../hooks/useProfile";
+import { useMainContext } from "../hooks/useMainContext";
 
 const EditHouseListing = () => {
-  const navigate = useNavigate();
-  const { listingId } = useParams();
-  const { tempPush } = useProfileContext();
-
-  // States
-  const [selectedImage, setSelectedImage] = useState({
-    coverImageUrl: null,
-    coverImagePreview: null,
-    imageOneUrl: null,
-    imageOnePreview: null,
-    imageTwoUrl: null,
-    imageTwoPreview: null,
-    imageThreeUrl: null,
-    imageThreePreview: null,
-    imageFourUrl: null,
-    imageFourPreview: null,
-  });
-
-  const [showDiscount, setShowDiscount] = useState(false);
-
-  // Refs
-  const coverImgRef = useRef(null);
-  const imgOneRef = useRef(null);
-  const imgTwoRef = useRef(null);
-  const imgThreeRef = useRef(null);
-  const imgFourRef = useRef(null);
-
-  // Handle Click on div to recieve input
-  const handleClick = (imgNum) => {
-    if (coverImgRef.current && imgNum === "cover") {
-      coverImgRef.current.click();
-    } else if (imgOneRef.current && imgNum === "one") {
-      imgOneRef.current.click();
-    } else if (imgTwoRef.current && imgNum === "two") {
-      imgTwoRef.current.click();
-    } else if (imgThreeRef.current && imgNum === "three") {
-      imgThreeRef.current.click();
-    } else if (imgFourRef.current && imgNum === "four") {
-      imgFourRef.current.click();
-    }
-  };
-
-  // Handle image upload
-  const handleImageChange = (e, imgNum) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (imgNum === "cover") {
-          setSelectedImage((prev) => ({
-            ...prev,
-            coverImageUrl: file,
-            coverImagePreview: reader.result,
-          }));
-        } else if (imgNum === "one") {
-          setSelectedImage((prev) => ({
-            ...prev,
-            imageOneUrl: file,
-            imageOnePreview: reader.result,
-          }));
-        } else if (imgNum === "two") {
-          setSelectedImage((prev) => ({
-            ...prev,
-            imageTwoUrl: file,
-            imageTwoPreview: reader.result,
-          }));
-        } else if (imgNum === "three") {
-          setSelectedImage((prev) => ({
-            ...prev,
-            imageThreeUrl: file,
-            imageThreePreview: reader.result,
-          }));
-        } else if (imgNum === "four") {
-          setSelectedImage((prev) => ({
-            ...prev,
-            imageFourUrl: file,
-            imageFourPreview: reader.result,
-          }));
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Form Submission
-
   const {
+    selectedImage,
+    showDiscount,
+    setShowDiscount,
+    handleClick,
+    handleImageChange,
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm();
+    isSubmitting,
+    submitFormHandler,
+    coverImgRef,
+    imgOneRef,
+    imgTwoRef,
+    imgThreeRef,
+    imgFourRef,
+    setStoreListingId,
+  } = useMainContext();
 
-  // Submit Form Handler
+  const navigate = useNavigate();
+  const { listingId } = useParams();
 
-  const submitFormHandler = async (data) => {
-    // Images Array
-    const images = [
-      selectedImage.coverImageUrl,
-      selectedImage.imageOneUrl,
-      selectedImage.imageTwoUrl,
-      selectedImage.imageThreeUrl,
-      selectedImage.imageFourUrl,
-    ];
+  //   // States
+  //   const [selectedImage, setSelectedImage] = useState({
+  //     coverImageUrl: null,
+  //     coverImagePreview: null,
+  //     imageOneUrl: null,
+  //     imageOnePreview: null,
+  //     imageTwoUrl: null,
+  //     imageTwoPreview: null,
+  //     imageThreeUrl: null,
+  //     imageThreePreview: null,
+  //     imageFourUrl: null,
+  //     imageFourPreview: null,
+  //   });
 
-    if (
-      data.discountPrice &&
-      parseFloat(data.discountPrice) > data.normalPrice &&
-      parseFloat(data.normalPrice)
-    ) {
-      toast.error("Sorry ! Discount price should be lower than normal price");
-    }
+  //   const [showDiscount, setShowDiscount] = useState(false);
 
-    // Making a Form of Data
-    const formData = new FormData();
-    if (images.length > 0) {
-      images.forEach((image) => formData.append("houseImages[]", image));
-    } else {
-      toast.error("Please upload images.");
-    }
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("address", data.address);
-    formData.append("normalPrice", data.normalPrice);
-    formData.append("discountPrice", data.discountPrice || 0);
-    formData.append("bedrooms", data.bedrooms);
-    formData.append("bathrooms", data.bathrooms);
-    formData.append("parking", data.parking);
-    formData.append("furnished", data.furnished);
-    formData.append("offer", data.offer);
-    formData.append("houseType", data.houseType);
+  //   // Refs
+  //   const coverImgRef = useRef(null);
+  //   const imgOneRef = useRef(null);
+  //   const imgTwoRef = useRef(null);
+  //   const imgThreeRef = useRef(null);
+  //   const imgFourRef = useRef(null);
 
-    // API Call
-    try {
-      const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingId}`,
-        formData,
-        { withCredentials: true }
-      );
+  //   // Handle Click on div to recieve input
+  //   const handleClick = (imgNum) => {
+  //     if (coverImgRef.current && imgNum === "cover") {
+  //       coverImgRef.current.click();
+  //     } else if (imgOneRef.current && imgNum === "one") {
+  //       imgOneRef.current.click();
+  //     } else if (imgTwoRef.current && imgNum === "two") {
+  //       imgTwoRef.current.click();
+  //     } else if (imgThreeRef.current && imgNum === "three") {
+  //       imgThreeRef.current.click();
+  //     } else if (imgFourRef.current && imgNum === "four") {
+  //       imgFourRef.current.click();
+  //     }
+  //   };
 
-      if (response.data.success) {
-        toast.success("House listing updated successfully !");
-        navigate("/profile");
-      } else {
-        toast.error("Sorry ! There is some issue with the form submission.");
-      }
-    } catch (error) {
-      toast.error("Sorry ! Some error occured.", error.message);
-    }
-  };
+  //   // Handle image upload
+  //   const handleImageChange = (e, imgNum) => {
+  //     const file = e.target.files[0];
+  //     if (file) {
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => {
+  //         if (imgNum === "cover") {
+  //           setSelectedImage((prev) => ({
+  //             ...prev,
+  //             coverImageUrl: file,
+  //             coverImagePreview: reader.result,
+  //           }));
+  //         } else if (imgNum === "one") {
+  //           setSelectedImage((prev) => ({
+  //             ...prev,
+  //             imageOneUrl: file,
+  //             imageOnePreview: reader.result,
+  //           }));
+  //         } else if (imgNum === "two") {
+  //           setSelectedImage((prev) => ({
+  //             ...prev,
+  //             imageTwoUrl: file,
+  //             imageTwoPreview: reader.result,
+  //           }));
+  //         } else if (imgNum === "three") {
+  //           setSelectedImage((prev) => ({
+  //             ...prev,
+  //             imageThreeUrl: file,
+  //             imageThreePreview: reader.result,
+  //           }));
+  //         } else if (imgNum === "four") {
+  //           setSelectedImage((prev) => ({
+  //             ...prev,
+  //             imageFourUrl: file,
+  //             imageFourPreview: reader.result,
+  //           }));
+  //         }
+  //       };
+  //       reader.readAsDataURL(file);
+  //     }
+  //   };
+
+  //   // Form Submission
+
+  //   const {
+  //     register,
+  //     handleSubmit,
+  //     formState: { errors, isSubmitting },
+  //   } = useForm();
+
+  //   // Submit Form Handler
+
+  //   const submitFormHandler = async (data) => {
+  //     // Images Array
+  //     const images = [
+  //       selectedImage.coverImageUrl,
+  //       selectedImage.imageOneUrl,
+  //       selectedImage.imageTwoUrl,
+  //       selectedImage.imageThreeUrl,
+  //       selectedImage.imageFourUrl,
+  //     ];
+
+  //     if (
+  //       data.discountPrice &&
+  //       parseFloat(data.discountPrice) > data.normalPrice &&
+  //       parseFloat(data.normalPrice)
+  //     ) {
+  //       toast.error("Sorry ! Discount price should be lower than normal price");
+  //     }
+
+  //     // Making a Form of Data
+  //     const formData = new FormData();
+  //     if (images.length > 0) {
+  //       images.forEach((image) => formData.append("houseImages[]", image));
+  //     } else {
+  //       toast.error("Please upload images.");
+  //     }
+  //     formData.append("title", data.title);
+  //     formData.append("description", data.description);
+  //     formData.append("address", data.address);
+  //     formData.append("normalPrice", data.normalPrice);
+  //     formData.append("discountPrice", data.discountPrice || 0);
+  //     formData.append("bedrooms", data.bedrooms);
+  //     formData.append("bathrooms", data.bathrooms);
+  //     formData.append("parking", data.parking);
+  //     formData.append("furnished", data.furnished);
+  //     formData.append("offer", data.offer);
+  //     formData.append("houseType", data.houseType);
+
+  //     // API Call
+  //     try {
+  //       const response = await axios.post(
+  //         `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingId}`,
+  //         formData,
+  //         { withCredentials: true }
+  //       );
+
+  //       if (response.data.success) {
+  //         toast.success("House listing updated successfully !");
+  //         navigate("/profile");
+  //       } else {
+  //         toast.error("Sorry ! There is some issue with the form submission.");
+  //       }
+  //     } catch (error) {
+  //       toast.error("Sorry ! Some error occured.", error.message);
+  //     }
+  //   };
 
   // <====================================== JSX Section ======================================>
 
@@ -174,7 +191,6 @@ const EditHouseListing = () => {
           <div className="flex flex-col gap-3 mb-6">
             <div className="w-full">
               <label
-                onClick={tempPush}
                 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                 htmlFor="title"
               >
