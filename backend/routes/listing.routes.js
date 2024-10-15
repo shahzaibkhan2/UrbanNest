@@ -13,7 +13,7 @@ router
   .route("/create-listing")
   .post(upload.array("houseImages[]", 5), verifyJWT, createListing);
 router
-  .route("/edit-listing")
+  .route("/edit-listing/:listingId")
   .post(upload.array("houseImages[]", 5), verifyJWT, editUserHouseListing);
 
 export default router;

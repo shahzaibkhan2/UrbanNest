@@ -87,7 +87,7 @@ const createListing = asyncHandler(async (req, res) => {
 // Update User House Listing
 const editUserHouseListing = asyncHandler(async (req, res) => {
   const userId = req?.user?._id;
-  const id = req?.params?.id;
+  const id = req?.params?.listingId;
   const {
     title,
     description,
@@ -123,7 +123,6 @@ const editUserHouseListing = asyncHandler(async (req, res) => {
   }
 
   const isUser = await HouseListing.findById(id);
-  console.log(userId, " ----", isUser.owner);
 
   if (!userId.equals(isUser?.owner)) {
     throw new ApiError(401, "Sorry ! Invalid profile ID.");

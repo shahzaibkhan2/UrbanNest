@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react";
 import { BlueButton, Heading } from "../components";
 import { Loader2 } from "lucide-react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { apiUri } from "../constants/apiRoutes";
 import axios from "axios";
+import { apiUri } from "../constants/apiRoutes";
 
 const EditHouseListing = () => {
   const navigate = useNavigate();
+  const { listingId } = useParams();
 
   // States
   const [selectedImage, setSelectedImage] = useState({
@@ -141,7 +141,7 @@ const EditHouseListing = () => {
     // API Call
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing`,
+        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingId}`,
         formData,
         { withCredentials: true }
       );
