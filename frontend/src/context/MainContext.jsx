@@ -139,16 +139,26 @@ const MainContextProvider = ({ children }) => {
     formData.append("offer", data.offer);
     formData.append("houseType", data.houseType);
 
+    // Endpoint
+
+    const endPoint = listingParam
+      ? `edit-listing/${listingParam.storedListingParam}`
+      : "create-listing";
+
     // API Call
     try {
       const response = await axios.post(
-        `${apiUri.baseUri}/${apiUri.houseListingUri}/edit-listing/${listingParam}`,
+        `${apiUri.baseUri}/${apiUri.houseListingUri}/${endPoint}`,
         formData,
         { withCredentials: true }
       );
 
       if (response.data.success) {
-        toast.success("House listing updated successfully !");
+        toast.success(
+          listingParam
+            ? "House listing updated successfully !"
+            : "House listing created successfully !"
+        );
         navigate("/profile");
       } else {
         toast.error("Sorry ! There is some issue with the form submission.");
