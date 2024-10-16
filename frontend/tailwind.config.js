@@ -7,6 +7,7 @@ export default {
         mf: "990px",
         xs: "400px",
         xss: "450px",
+        xsss: "500px",
         xvs: "350px",
       },
       keyframes: {
