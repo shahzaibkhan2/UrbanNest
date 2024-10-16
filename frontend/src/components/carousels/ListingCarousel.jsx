@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css";
 import h1 from "../../assets/house1.jpg";
 
-const HomeCarousel = () => {
+const ListingCarousel = () => {
   return (
     <Swiper
       navigation={true}
@@ -17,7 +17,7 @@ const HomeCarousel = () => {
     >
       {[0, 1, 2, 3].map((slider) => (
         <SwiperSlide>
-          <div className="w-full h-96">
+          <div className="w-full h-[500px]">
             <img
               src={h1}
               alt="slide"
@@ -30,4 +30,4 @@ const HomeCarousel = () => {
   );
 };
 
-export default HomeCarousel;
+export default ListingCarousel;

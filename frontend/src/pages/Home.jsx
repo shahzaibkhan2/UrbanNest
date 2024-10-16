@@ -1,11 +1,5 @@
-import HomeCarousel from "../components/carousels/HomeCarousel";
-
 const Home = () => {
-  return (
-    <main className="mt-[5.02rem]">
-      <HomeCarousel />
-    </main>
-  );
+  return <main className="mt-[5.02rem]"></main>;
 };
 
 export default Home;
