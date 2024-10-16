@@ -17,7 +17,7 @@ const ListingCarousel = () => {
     >
       {[0, 1, 2, 3].map((slider) => (
         <SwiperSlide>
-          <div className="w-full h-[500px]">
+          <div className="w-full h-[300px] md:h-[400px] lg:h-[500px]">
             <img
               src={h1}
               alt="slide"
