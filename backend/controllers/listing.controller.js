@@ -176,7 +176,9 @@ const getSingleListing = asyncHandler(async (req, res) => {
 
   // if (!userId)
   //   throw new ApiError("Sorry ! Sign in first to contact with the user.");
-  const isListing = await HouseListing.findById(listingId).select("-password");
+  const isListing = await HouseListing.findById(listingId)
+    .populate("owner", "username")
+    .select("-password");
   if (!isListing)
     throw new ApiError("Sorry ! Listing with this ID does not exists.");
 

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
+import { toast } from "sonner";
 
 const SingleListing = () => {
   const [listing, setListing] = useState(null);
@@ -13,11 +14,17 @@ const SingleListing = () => {
 
   useEffect(() => {
     const getListing = async () => {
-      const res = await axios.get(
-        `${apiUri.baseUri}/${apiUri.houseListingUri}/get-listing/670e3784740e2b1f76ed68ad`
-      );
-      if (res.data.success) {
-        setListing(res.data.data);
+      try {
+        const res = await axios.get(
+          `${apiUri.baseUri}/${apiUri.houseListingUri}/get-listing/670e3784740e2b1f76ed68ad`
+        );
+        if (res.data.success) {
+          setListing(res.data.data);
+        } else {
+          toast.error("Sorry ! Internal server error.");
+        }
+      } catch (error) {
+        toast.error("Sorry ! Internal server error", error);
       }
     };
     getListing();
@@ -27,55 +34,62 @@ const SingleListing = () => {
     <main className="mt-[5.02rem]">
       <ListingCarousel />
       <article className="my-20 mx-4 lg:mx-24 flex flex-col gap-3 tracking-wide text-blue-950">
-        <h2 className="text-3xl font-semibold">{listing?.title}</h2>
+        <h2 className="text-3xl font-semibold capitalize">
+          {listing?.title ? listing.title : "A perfect house"}
+        </h2>
         <ul className="flex flex-wrap md:flex-nowrap gap-10 my-3 text-sm text-nowrap">
           <li className="flex items-center gap-2">
             <GiSofa size={22} />{" "}
             <p>{listing?.furnished ? "Furnished" : "Not Furnished"}</p>
           </li>
           <li className="flex items-center gap-2">
-            <FaCar size={22} /> <p>Parking</p>
+            <FaCar size={22} />{" "}
+            <p>{listing?.parking ? "Parking" : "No Parking"}</p>
           </li>
           <li className="flex items-center gap-2">
             <FaBed size={25} />{" "}
             <p>
-              <span className="text-green-700">5</span> Beds
+              <span className="text-green-700">
+                {listing?.beds ? listing.beds : 1}
+              </span>{" "}
+              Beds
             </p>
           </li>
           <li className="flex items-center gap-2">
             <FaBath size={21} />{" "}
             <p>
-              <span className="text-green-700">2</span> Bathrooms
+              <span className="text-green-700">
+                {listing?.bathrooms ? listing.bathrooms : 1}
+              </span>{" "}
+              Bathrooms
             </p>
           </li>
         </ul>
-        <p className="flex gap-2 items-center text-sm mt-3 text-green-700">
-          <IoLocationSharp size={22} /> Malibo Point , California, USA
+        <p className="flex gap-2 items-center text-sm mt-3 text-green-700 capitalize">
+          <IoLocationSharp size={22} /> {listing?.address && listing.address}
         </p>
         <div className="flex items-center text-blue-950 font-semibold gap-2 mt-6">
-          <p className="px-8 py-4 yellow-glassmorphism border-r-2">For Sale</p>
-          <p className="px-8 py-4 yellow-glassmorphism">100$ Discount</p>
+          <p className="px-8 py-4 yellow-glassmorphism border-r-2 capitalize">
+            For {listing?.houseType && listing.houseType}
+          </p>
+          <p className="px-8 py-4 yellow-glassmorphism">
+            ${listing?.discountPrice ? listing.discountPrice : 0}
+          </p>
         </div>
         <div className="flex flex-col gap-2 mt-6">
-          <h3 className="text-lg font-bold">Description</h3>{" "}
+          <h3 className="text-lg font-bold">Description</h3>
           <p className="text-sm">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. A porro
-            consequuntur soluta. Dolor, dolorum vero reprehenderit minima rerum
-            laborum dicta rem incidunt beatae asperiores deserunt ab, esse
-            reiciendis officiis suscipit. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Molestias maxime ipsum corrupti maiores magnam
-            esse debitis unde voluptatum, labore deserunt? Numquam nobis
-            corrupti rerum autem voluptates eveniet quasi, at in. Lorem ipsum
-            dolor sit amet consectetur adipisicing elit. Dignissimos mollitia
-            nostrum sit distinctio ut sapiente dolorem recusandae error placeat
-            qui doloribus autem, blanditiis architecto minus reprehenderit,
-            quidem, laudantium pariatur ad.
+            {listing?.description
+              ? listing.description
+              : "This house is a beautiful house."}
           </p>
         </div>
         <div className="flex-col md:flex-row items-center space-y-10 flex xvs:justify-between my-10 relative">
           <div className="flex flex-col gap-1">
             <h4 className="font-bold text-md">Owner</h4>
-            <p className="text-sm text-gray-500">Shahzaib Khan</p>
+            <p className="text-sm text-gray-500 capitalize">
+              {listing?.owner?.username ? listing.owner.username : "Owner"}
+            </p>
           </div>
           <div className="relative group inline-block">
             {showOwner ? (
@@ -87,7 +101,7 @@ const SingleListing = () => {
                   className="resize-none p-2 bg-yellow-100 rounded-lg outline-none border-none"
                 />
                 <Link
-                  to={`mailto:drshahzeb47@gmail.com?subject=Regarding Shahzaib Khan&body=hello Mr.Shahzaib`}
+                  to={`mailto:shahzaib@gmail.com?subject=Regarding Shahzaib Khan&body=hello Mr.Shahzaib`}
                   className="text-center py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
                 >
                   Send Message
