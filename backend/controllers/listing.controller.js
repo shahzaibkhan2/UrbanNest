@@ -186,5 +186,43 @@ const getSingleListing = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, isListing, "Listing fetched successfully !"));
 });
+const getAllListings = asyncHandler(async (req, res) => {
+  const limit = parseInt(req?.param?.limit) || 9;
+  const skip = parseInt(req?.param?.skip) || 0;
+
+  let furnished = req?.param?.furnished;
+  if (furnished === undefined || furnished === "false")
+    furnished = { $in: [true, false] };
+
+  let offer = req?.param?.offer;
+  if (offer === undefined || offer === "false") offer = { $in: [true, false] };
+
+  let houseType = req?.param?.houseType;
+  if (houseType === undefined || houseType === "all")
+    houseType = { $in: ["sell", "rent"] };
+
+  let parking = req?.param?.parking;
+  if (parking === undefined || parking === "false")
+    parking = { $in: [true, false] };
+
+  const sort = req?.param?.sort || "createdAt";
+  const order = req?.param?.order || "desc";
+  const searchParam = req?.param?.searchParam || "";
+
+  const allListings = await HouseListing.find({
+    title: { $regex: searchParam, $options: "i" },
+    furnished,
+    offer,
+    houseType,
+    parking,
+  })
+    .sort({ [sort]: order })
+    .skip(skip)
+    .limit(limit);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, allListings, "Listings fetched successfully !"));
+});
 
 export { createListing, editUserHouseListing, getSingleListing };
