@@ -2,27 +2,36 @@ import { ListingCarousel } from "../components";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaCar, FaBed, FaBath } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { apiUri } from "../constants/apiRoutes";
 
 const SingleListing = () => {
-  const [owner, setOwner] = useState(null);
+  const [listing, setListing] = useState(null);
   const [showOwner, setShowOwner] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+
+  useEffect(() => {
+    const getListing = async () => {
+      const res = await axios.get(
+        `${apiUri.baseUri}/${apiUri.houseListingUri}/get-listing/670e3784740e2b1f76ed68ad`
+      );
+      if (res.data.success) {
+        setListing(res.data.data);
+      }
+    };
+    getListing();
+  }, []);
+
   return (
     <main className="mt-[5.02rem]">
       <ListingCarousel />
-      <article className="my-20 mx-4 lg:mx-24 flex flex-col gap-3 uppercase tracking-wide text-blue-950">
-        <h2 className="text-3xl font-semibold">
-          The lake side cottage - $900 / month
-        </h2>
+      <article className="my-20 mx-4 lg:mx-24 flex flex-col gap-3 tracking-wide text-blue-950">
+        <h2 className="text-3xl font-semibold">{listing?.title}</h2>
         <ul className="flex flex-wrap md:flex-nowrap gap-10 my-3 text-sm text-nowrap">
-          <li className="flex items-center gap-">
-            <GiSofa size={22} /> <p>Furnished</p>
+          <li className="flex items-center gap-2">
+            <GiSofa size={22} />{" "}
+            <p>{listing?.furnished ? "Furnished" : "Not Furnished"}</p>
           </li>
           <li className="flex items-center gap-2">
             <FaCar size={22} /> <p>Parking</p>
@@ -43,11 +52,9 @@ const SingleListing = () => {
         <p className="flex gap-2 items-center text-sm mt-3 text-green-700">
           <IoLocationSharp size={22} /> Malibo Point , California, USA
         </p>
-        <div className="flex items-center text-blue-950 font-semibold mt-6">
-          <p className="px-8 py-4 bg-yellow-300 border-r-2 border-white">
-            For Sale
-          </p>
-          <p className="px-8 py-4 bg-yellow-300">100$ Discount</p>
+        <div className="flex items-center text-blue-950 font-semibold gap-2 mt-6">
+          <p className="px-8 py-4 yellow-glassmorphism border-r-2">For Sale</p>
+          <p className="px-8 py-4 yellow-glassmorphism">100$ Discount</p>
         </div>
         <div className="flex flex-col gap-2 mt-6">
           <h3 className="text-lg font-bold">Description</h3>{" "}
@@ -65,24 +72,31 @@ const SingleListing = () => {
             quidem, laudantium pariatur ad.
           </p>
         </div>
-        <div className="flex-col md:flex-row items-center space-y-10 flex xvs:justify-between my-10">
-          <div>
+        <div className="flex-col md:flex-row items-center space-y-10 flex xvs:justify-between my-10 relative">
+          <div className="flex flex-col gap-1">
             <h4 className="font-bold text-md">Owner</h4>
             <p className="text-sm text-gray-500">Shahzaib Khan</p>
           </div>
-          <div class="relative group inline-block">
+          <div className="relative group inline-block">
             {showOwner ? (
-              <form className="flex flex-col gap-3 w-[500px]">
+              <form className="flex flex-col gap-3 w-[500px] border border-gray-300 p-8 yellow-glassmorphism">
                 <textarea
                   rows="6"
+                  required
                   placeholder="Enter message..."
                   className="resize-none p-2 bg-yellow-100 rounded-lg outline-none border-none"
                 />
-                <button
-                  onClick={() => setShowOwner(true)}
-                  className="py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
+                <Link
+                  to={`mailto:drshahzeb47@gmail.com?subject=Regarding Shahzaib Khan&body=hello Mr.Shahzaib`}
+                  className="text-center py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
                 >
                   Send Message
+                </Link>
+                <button
+                  onClick={() => setShowOwner(false)}
+                  className="py-3 px-7 bg-red-900 text-white hover:bg-red-950 rounded-full transition duration-300"
+                >
+                  Cancel Message
                 </button>
               </form>
             ) : (

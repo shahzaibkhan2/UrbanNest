@@ -170,4 +170,19 @@ const editUserHouseListing = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "House listing updated successfully !"));
 });
 
-export { createListing, editUserHouseListing };
+const getSingleListing = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id;
+  const { listingId } = req?.params;
+
+  // if (!userId)
+  //   throw new ApiError("Sorry ! Sign in first to contact with the user.");
+  const isListing = await HouseListing.findById(listingId).select("-password");
+  if (!isListing)
+    throw new ApiError("Sorry ! Listing with this ID does not exists.");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, isListing, "Listing fetched successfully !"));
+});
+
+export { createListing, editUserHouseListing, getSingleListing };

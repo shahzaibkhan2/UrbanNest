@@ -5,6 +5,7 @@ import { upload } from "../middlewares/multer.middlewares.js";
 import {
   createListing,
   editUserHouseListing,
+  getSingleListing,
 } from "../controllers/listing.controller.js";
 
 const router = Router();
@@ -15,5 +16,6 @@ router
 router
   .route("/edit-listing/:listingId")
   .post(upload.array("houseImages[]", 5), verifyJWT, editUserHouseListing);
+router.route("/get-listing/:listingId").get(getSingleListing);
 
 export default router;
