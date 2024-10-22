@@ -105,6 +105,7 @@ const SingleListing = () => {
             </label>
             <textarea
               rows="6"
+              ref={messageRef}
               id="message"
               required
               placeholder="Enter message..."
