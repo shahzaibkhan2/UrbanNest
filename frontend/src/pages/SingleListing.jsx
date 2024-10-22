@@ -2,15 +2,18 @@ import { ListingCarousel } from "../components";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaCar, FaBed, FaBath } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const SingleListing = () => {
   const [listing, setListing] = useState(null);
   const [showOwner, setShowOwner] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const messageRef = useRef();
 
   useEffect(() => {
     const getListing = async () => {
@@ -92,16 +95,23 @@ const SingleListing = () => {
             </p>
           </div>
         </article>
-        {showOwner ? (
+        {user.user && showOwner ? (
           <form className="flex flex-col gap-3 w-[300px] xss:w-[400px] sm:w-[500px] border border-gray-300 p-8 yellow-glassmorphism">
+            <label
+              htmlFor="message"
+              className="capitalize text-lg text-blue-950"
+            >
+              Send a message to {listing?.owner?.username} (Owner)
+            </label>
             <textarea
               rows="6"
+              id="message"
               required
               placeholder="Enter message..."
               className="resize-none p-2 bg-yellow-100 rounded-lg outline-none border-none"
             />
             <Link
-              to={`mailto:shahzaib@gmail.com?subject=Regarding Shahzaib Khan&body=hello Mr.Shahzaib`}
+              to={`mailto:${listing?.email}?subject=Regarding ${listing?.owner?.username}&body=${messageRef?.current?.value}`}
               className="text-center py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
             >
               Send Message
