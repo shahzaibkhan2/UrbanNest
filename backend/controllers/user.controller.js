@@ -344,6 +344,25 @@ const deleteUserHouseListing = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, "House listings fetched successfully !"));
 });
 
+// Get Owner
+const getOwner = asyncHandler(async (req, res) => {
+  const userId = req?.user?._id;
+  const ownerId = req?.params?.id;
+
+  if (!userId) throw new ApiError("Sorry ! Invalid credentials.");
+
+  const isOwner = await HouseListing.findById(ownerId);
+
+  if (!ownerId) throw new ApiError("Sorry ! Invalid owner ID.");
+
+  const filteredOwner = await HouseListing.findById(isOwner?._id).select(
+    "-password"
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, filteredOwner, "Owner fetched successfully !"));
+});
 export {
   registerUser,
   loginUser,
@@ -354,4 +373,5 @@ export {
   deleteProfile,
   getAllUserHouseListings,
   deleteUserHouseListing,
+  getOwner,
 };

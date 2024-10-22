@@ -4,6 +4,7 @@ import {
   deleteUserHouseListing,
   editProfile,
   getAllUserHouseListings,
+  getOwner,
   googleSignIn,
   loginUser,
   logoutUser,
@@ -23,6 +24,7 @@ router
   .post(verifyJWT, upload.single("avatar"), editProfile);
 router.route("/delete-profile/:id").delete(verifyJWT, deleteProfile);
 router.route("/get-listings/:id").get(verifyJWT, getAllUserHouseListings);
+router.route("/get-owner/:id").get(verifyJWT, getOwner);
 router.route("/delete-listing/:id").delete(verifyJWT, deleteUserHouseListing);
 
 export default router;

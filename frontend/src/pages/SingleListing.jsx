@@ -2,9 +2,17 @@ import { ListingCarousel } from "../components";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaCar, FaBed, FaBath } from "react-icons/fa";
 import { GiSofa } from "react-icons/gi";
-import PopoverComponent from "../components/Temp";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 const SingleListing = () => {
+  const [owner, setOwner] = useState(null);
+  const [showOwner, setShowOwner] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
   return (
     <main className="mt-[5.02rem]">
       <ListingCarousel />
@@ -57,16 +65,35 @@ const SingleListing = () => {
             quidem, laudantium pariatur ad.
           </p>
         </div>
-        <div className="flex-col xvs:flex-row items-center space-y-5 flex xvs:justify-between my-10">
+        <div className="flex-col md:flex-row items-center space-y-10 flex xvs:justify-between my-10">
           <div>
             <h4 className="font-bold text-md">Owner</h4>
             <p className="text-sm text-gray-500">Shahzaib Khan</p>
           </div>
           <div class="relative group inline-block">
-            <button className="group py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300">
-              Owner Details
-            </button>
-            <div class="hidden xsss:block group-hover:opacity-100 opacity-0 invisible group-hover:visible transition duration-300 absolute w-72 mt-2 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg py-2 z-10 p-2 -left-56 -top-[16rem]">
+            {showOwner ? (
+              <form className="flex flex-col gap-3 w-[500px]">
+                <textarea
+                  rows="6"
+                  placeholder="Enter message..."
+                  className="resize-none p-2 bg-yellow-100 rounded-lg outline-none border-none"
+                />
+                <button
+                  onClick={() => setShowOwner(true)}
+                  className="py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
+                >
+                  Send Message
+                </button>
+              </form>
+            ) : (
+              <button
+                onClick={() => setShowOwner(true)}
+                className="group py-3 px-7 bg-blue-900 text-white hover:bg-blue-950 rounded-full transition duration-300"
+              >
+                Contact Owner
+              </button>
+            )}
+            {/* <div class="hidden xsss:block group-hover:opacity-100 opacity-0 invisible group-hover:visible transition duration-300 absolute w-72 mt-2 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg py-2 z-10 p-2 -left-56 -top-[16rem]">
               <div class="flex items-center justify-between gap-4 mb-2">
                 <img
                   src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1480&amp;q=80"
@@ -139,7 +166,7 @@ const SingleListing = () => {
                   London
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </article>
