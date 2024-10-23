@@ -2,7 +2,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { IoCloseOutline } from "react-icons/io5";
 import { CiMenuFries } from "react-icons/ci";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { navTitles } from "../../data/navbarData";
 import { useSelector } from "react-redux";
 import { RiArrowDownSFill } from "react-icons/ri";
@@ -10,7 +10,7 @@ import { RiArrowDownSFill } from "react-icons/ri";
 const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const searchParamRef = useRef(null);
+  const [searchInput, setSearchInput] = useState("");
 
   const [toggleNavMenu, setToggleNavMenu] = useState(false);
   const NavItem = ({ title, classNameProps }) => {
@@ -20,11 +20,20 @@ const Navbar = () => {
   const searchParamSubmitHandler = (event) => {
     event.preventDefault();
     const searchParamUrl = new URLSearchParams(window.location.search);
-    if (searchParamRef?.current && searchParamRef?.current?.value)
-      searchParamUrl.set("searchParam", searchParamRef.current.value);
+    if (!searchInput.trim()) return;
+    searchParamUrl.set("searchParam", searchInput);
     const searchQuery = searchParamUrl.toString();
-    navigate(`/search?${searchQuery}`);
+    if (searchQuery) {
+      navigate(`/search?${searchQuery}`);
+    }
   };
+
+  useEffect(() => {
+    const searchParamUrl = new URLSearchParams(location.search);
+    const searchParamFromUrl = searchParamUrl.get("searchParam");
+    if (searchParamFromUrl && searchParamFromUrl !== searchInput)
+      setSearchInput(searchParamFromUrl);
+  }, [location.search, searchInput]);
 
   return (
     <header className="fixed top-0 bg-yellow-300 shadow-md w-full z-[9999]">
@@ -40,13 +49,13 @@ const Navbar = () => {
           className="hidden xvs:flex items-center bg-yellow-200 rounded-lg p-3"
         >
           <input
-            value={searchParamRef?.current?.value}
-            ref={searchParamRef}
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
             type="text"
             placeholder="Search..."
             className="focus:outline-none bg-transparent text-blue-900 text-md md:text-lg w-24 xs:w-32 lg:w-64"
           />
-          <button>
+          <button type="submit">
             <IoSearchSharp className="text-blue-900 size-6" />
           </button>
         </form>
