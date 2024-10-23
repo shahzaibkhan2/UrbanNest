@@ -6,6 +6,7 @@ import {
   Home,
   Login,
   Profile,
+  Search,
   SingleListing,
 } from "./pages";
 import { Navbar, PrivateProfileRoute } from "./components";
@@ -25,6 +26,7 @@ const App = () => {
               path="/single-listing/:listingId"
               element={<SingleListing />}
             />
+            <Route path="/search" element={<Search />} />
             <Route element={<PrivateProfileRoute />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/edit-profile" element={<EditProfile />} />

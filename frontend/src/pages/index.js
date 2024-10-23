@@ -6,3 +6,4 @@ export { default as About } from "./About";
 export { default as CreateHouseListing } from "./CreateHouseListing";
 export { default as EditHouseListing } from "./EditHouseListing";
 export { default as SingleListing } from "./SingleListing";
+export { default as Search } from "./Search";
