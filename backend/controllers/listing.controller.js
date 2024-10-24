@@ -187,27 +187,27 @@ const getSingleListing = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, isListing, "Listing fetched successfully !"));
 });
 const getAllListings = asyncHandler(async (req, res) => {
-  const limit = parseInt(req?.param?.limit) || 9;
-  const skip = parseInt(req?.param?.skip) || 0;
+  const limit = parseInt(req?.query?.limit) || 9;
+  const skip = parseInt(req?.query?.skip) || 0;
 
-  let furnished = req?.param?.furnished;
+  let furnished = req?.query?.furnished;
   if (furnished === undefined || furnished === "false")
-    furnished = { $in: [true, false] };
+    furnished = { $in: [false, true] };
 
-  let offer = req?.param?.offer;
-  if (offer === undefined || offer === "false") offer = { $in: [true, false] };
+  let offer = req?.query?.offer;
+  if (offer === undefined || offer === "false") offer = { $in: [false, true] };
 
-  let houseType = req?.param?.houseType;
+  let houseType = req?.query?.houseType;
   if (houseType === undefined || houseType === "all")
     houseType = { $in: ["sell", "rent"] };
 
-  let parking = req?.param?.parking;
+  let parking = req?.query?.parking;
   if (parking === undefined || parking === "false")
-    parking = { $in: [true, false] };
+    parking = { $in: [false, true] };
 
-  const sort = req?.param?.sort || "createdAt";
-  const order = req?.param?.order || "desc";
-  const searchParam = req?.param?.searchParam || "";
+  const sort = req?.query?.sort || "createdAt";
+  const order = req?.query?.order || "desc";
+  const searchParam = req?.query?.searchParam || "";
 
   const allListings = await HouseListing.find({
     title: { $regex: searchParam, $options: "i" },
@@ -225,4 +225,9 @@ const getAllListings = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, allListings, "Listings fetched successfully !"));
 });
 
-export { createListing, editUserHouseListing, getSingleListing };
+export {
+  createListing,
+  editUserHouseListing,
+  getSingleListing,
+  getAllListings,
+};

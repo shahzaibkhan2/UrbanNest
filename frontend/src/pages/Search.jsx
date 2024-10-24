@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apiUri } from "../constants/apiRoutes";
+import { toast } from "sonner";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -12,6 +15,61 @@ const Search = () => {
     offer: false,
     furnished: false,
   });
+  const [isLoading, setIsloading] = useState(false);
+  const [houselistings, setHouseListings] = useState([]);
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(location.search);
+    const searchParamFromUrl = urlSearchParams.get("searchParam");
+    const orderParamFromUrl = urlSearchParams.get("order");
+    const houseTypeParamFromUrl = urlSearchParams.get("houseType");
+    const parkingParamFromUrl = urlSearchParams.get("parking");
+    const sortParamFromUrl = urlSearchParams.get("sort");
+    const offerParamFromUrl = urlSearchParams.get("offer");
+    const furnishedParamFromUrl = urlSearchParams.get("furnished");
+
+    if (
+      searchParamFromUrl ||
+      orderParamFromUrl ||
+      houseTypeParamFromUrl ||
+      parkingParamFromUrl ||
+      sortParamFromUrl ||
+      offerParamFromUrl ||
+      furnishedParamFromUrl
+    ) {
+      setSearchData({
+        searchParam: searchParamFromUrl || "",
+        order: orderParamFromUrl || "desc",
+        houseType: houseTypeParamFromUrl || "all",
+        parking: parkingParamFromUrl === "true" ? true : false,
+        furnished: furnishedParamFromUrl === "true" ? true : false,
+        sort: sortParamFromUrl || "created_at",
+        offer: offerParamFromUrl === "true" ? true : false,
+      });
+
+      const fetchAllListings = async () => {
+        try {
+          const searchQuery = urlSearchParams.toString();
+          setIsloading(true);
+          const response = await axios.get(
+            `${apiUri.baseUri}/${apiUri.houseListingUri}/get-allListings?${searchQuery}`
+          );
+
+          if (response.data.success) setHouseListings(response.data.data);
+          else {
+            toast.error("Sorry ! There is some issue with the server.");
+          }
+        } catch (error) {
+          toast.error("Sorry ! There is some issue with the server.");
+          console.log("Error fetching listings", error.message);
+        } finally {
+          setIsloading(false);
+        }
+      };
+
+      fetchAllListings();
+    }
+  }, [location.search]);
 
   // onChange Handler
   const onChangeHandler = (e) => {

@@ -5,6 +5,7 @@ import { upload } from "../middlewares/multer.middlewares.js";
 import {
   createListing,
   editUserHouseListing,
+  getAllListings,
   getSingleListing,
 } from "../controllers/listing.controller.js";
 
@@ -17,5 +18,6 @@ router
   .route("/edit-listing/:listingId")
   .post(upload.array("houseImages[]", 5), verifyJWT, editUserHouseListing);
 router.route("/get-listing/:listingId").get(getSingleListing);
+router.route("/get-allListings").get(getAllListings);
 
 export default router;
