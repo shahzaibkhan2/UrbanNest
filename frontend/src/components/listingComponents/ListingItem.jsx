@@ -18,7 +18,7 @@ const ListingItem = ({ listing }) => {
           <h1 className="text-2xl font-bold text-gray-800 line-clamp-1 my-3">
             {listing?.title}
           </h1>
-          <ul className="flex items-center gap-6">
+          <ul className="flex items-center gap-6 text-gray-800">
             <li className="flex items-center gap-2">
               <GiSofa size={22} />
             </li>
@@ -27,9 +27,11 @@ const ListingItem = ({ listing }) => {
             </li>
             <li className="flex items-center gap-2">
               <FaBed size={25} />
+              <span>{listing?.bedrooms}</span>
             </li>
             <li className="flex items-center gap-2">
-              <FaBath size={21} />
+              <FaBath className="size-5 mb-1" />
+              <span className="mt-1">{listing?.bathrooms}</span>
             </li>
           </ul>
           <p className="line-clamp-3 text-gray-800 my-3">
@@ -46,7 +48,7 @@ const ListingItem = ({ listing }) => {
               ${listing?.normalPrice}
             </p>
             <span className="ml-2 line-through text-green-800">
-              {listing?.discountPrice}
+              ${listing?.discountPrice}
             </span>
           </div>
         </div>
