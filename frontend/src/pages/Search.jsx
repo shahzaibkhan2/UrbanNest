@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
-import BlockLoader from "../components/loaders/BlockLoader";
 import sadEmoji from "../assets/sad.png";
+import { BlockLoader, ListingItem } from "../components";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -258,6 +258,11 @@ const Search = () => {
           </div>
         )}
         {isLoading && <BlockLoader />}
+        {!isLoading &&
+          houselistings &&
+          houselistings?.map((listing) => (
+            <ListingItem key={listing?._id} listing={listing} />
+          ))}
       </section>
     </main>
   );
