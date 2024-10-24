@@ -1,8 +1,70 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Search = () => {
+  const navigate = useNavigate();
+  const [searchData, setSearchData] = useState({
+    searchParam: "",
+    order: "desc",
+    houseType: "all",
+    sort: "created_at",
+    parking: false,
+    offer: false,
+    furnished: false,
+  });
+
+  // onChange Handler
+  const onChangeHandler = (e) => {
+    if (
+      e.target.id === "all" ||
+      e.target.id === "sell" ||
+      e.target.id === "rent"
+    )
+      setSearchData({ ...searchData, houseType: e.target.id });
+
+    if (e.target.id === "searchParam")
+      setSearchData({ ...searchData, searchParam: e.target.value });
+
+    if (
+      e.target.id === "parking" ||
+      e.target.id === "furnished" ||
+      e.target.id === "offer"
+    )
+      setSearchData({
+        ...searchData,
+        [e.target.id]:
+          e.target.checked === "true" || e.target.checked ? true : false,
+      });
+
+    if (e.target.id === "sort_ordering") {
+      const sort = e.target.value.split("_")[0] || "created_at";
+      const order = e.target.value.split("_")[1] || "desc";
+      setSearchData({ ...searchData, order, sort });
+    }
+  };
+
+  // onSubmit Handler
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    const urlSearchParams = new URLSearchParams();
+    if (searchData.searchParam)
+      urlSearchParams.set("searchParam", searchData.searchParam);
+    if (searchData.offer) urlSearchParams.set("offer", searchData.offer);
+    if (searchData.furnished)
+      urlSearchParams.set("furnished", searchData.furnished);
+    if (searchData.sort) urlSearchParams.set("sort", searchData.sort);
+    if (searchData.order) urlSearchParams.set("order", searchData.order);
+    if (searchData.parking) urlSearchParams.set("parking", searchData.parking);
+    if (searchData.houseType)
+      urlSearchParams.set("houseType", searchData.houseType);
+
+    const searchQuery = urlSearchParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
   return (
     <main className="flex mt-20 pt-10 px-[6%] gap-4">
       <section className="flex flex-col p-5 border-r-[0.5px] border-gray-300">
-        <form className="flex flex-col gap-10">
+        <form onSubmit={onSubmitHandler} className="flex flex-col gap-10">
           <div>
             <label
               htmlFor="search"
@@ -11,9 +73,10 @@ const Search = () => {
               Search Here
             </label>
             <input
+              onChange={onChangeHandler}
+              value={searchData.searchParam}
               type="text"
-              id="search"
-              name="search"
+              id="searchParam"
               className="border p-2 w-full outline-none rounded-lg bg-yellow-100"
               placeholder="Enter search here"
             />
@@ -21,14 +84,15 @@ const Search = () => {
 
           <div>
             <p className="mb-2 font-semibold text-gray-800 text-lg">
-              House Types
+              House Type
             </p>
             <div className="flex flex-wrap gap-5 items-center">
               <label className="inline-flex items-center space-x-2">
                 <input
+                  onChange={onChangeHandler}
+                  checked={searchData.houseType === "rent"}
+                  id="rent"
                   type="checkbox"
-                  name="types"
-                  value="rent"
                   className="size-5"
                 />
                 <span className="text-gray-700">Rent</span>
@@ -36,29 +100,32 @@ const Search = () => {
 
               <label className="inline-flex items-center space-x-2">
                 <input
+                  onChange={onChangeHandler}
+                  checked={searchData.houseType === "sell"}
                   type="checkbox"
-                  name="types"
-                  value="sale"
+                  id="sell"
                   className="size-5"
                 />
-                <span className="text-gray-700">Sale</span>
+                <span className="text-gray-700">Sell</span>
               </label>
 
               <label className="inline-flex items-center space-x-2">
                 <input
+                  onChange={onChangeHandler}
+                  checked={searchData.houseType === "all"}
                   type="checkbox"
-                  name="types"
-                  value="rentSale"
+                  id="all"
                   className="size-5"
                 />
-                <span className="text-gray-700">Rent & Sale</span>
+                <span className="text-gray-700">All</span>
               </label>
 
               <label className="inline-flex items-center space-x-2">
                 <input
+                  onChange={onChangeHandler}
+                  checked={searchData.offer}
                   type="checkbox"
-                  name="types"
-                  value="offer"
+                  id="offer"
                   className="size-5"
                 />
                 <span className="text-gray-700">Offer</span>
@@ -70,9 +137,10 @@ const Search = () => {
             <p className="mb-2 font-semibold text-gray-800 text-lg">Features</p>
             <label className="inline-flex items-center space-x-2 mr-4">
               <input
+                onChange={onChangeHandler}
+                checked={searchData.parking}
                 type="checkbox"
-                name="amenities"
-                value="parking"
+                id="parking"
                 className="size-5"
               />
               <span className="text-gray-700">Parking</span>
@@ -80,9 +148,10 @@ const Search = () => {
 
             <label className="inline-flex items-center space-x-2">
               <input
+                onChange={onChangeHandler}
+                checked={searchData.furnished}
                 type="checkbox"
-                name="amenities"
-                value="furnished"
+                id="furnished"
                 className="size-5"
               />
               <span className="text-gray-700">Furnished</span>
@@ -96,15 +165,15 @@ const Search = () => {
               Sort By
             </label>
             <select
-              id="sort"
-              name="sort"
+              onChange={onChangeHandler}
+              defaultValue={"created_at_desc"}
+              id="sort_ordering"
               className="border p-2 w-full focus:outline-none outline-none rounded-lg text-gray-700"
             >
-              <option>Select</option>
-              <option value="priceHighLow">Price: High to Low</option>
-              <option value="priceLowHigh">Price: Low to High</option>
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
+              <option value="normalPrice_desc">Price: High to Low</option>
+              <option value="normalPrice_asc">Price: Low to High</option>
+              <option value="createdAt_desc">Newest</option>
+              <option value="createdAt_asc">Oldest</option>
             </select>
           </div>
           <button
