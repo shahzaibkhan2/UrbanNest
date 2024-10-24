@@ -1,39 +1,57 @@
+import { IoLocationSharp } from "react-icons/io5";
+import { FaCar, FaBed, FaBath } from "react-icons/fa";
+import { GiSofa } from "react-icons/gi";
+
 const ListingItem = ({ listing }) => {
   return (
-    <div className="flex items-center justify-center text-white bg-blue-400">
-      <div className="flex max-w-2xl rounded-xl border-black bg-white ">
-        <div className="w-1/2 h-full">
-          <img
-            src={listing?.houseImages[0]}
-            alt="house-image"
-            className="rounded-l-xl size-full object-cover"
-          />
-        </div>
+    <article className="flex flex-col w-[330px] rounded-lg bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300 cursor-pointer">
+      <div className="w-full rounded-t-lg overflow-hidden">
+        <img
+          src={listing?.houseImages[0]}
+          alt="house-image"
+          className="rounded-t-xl size-full object-cover overflow-hidden hover:scale-105 transition duration-300"
+        />
+      </div>
 
-        <div className="w-1/2 space-y-4 rounded-xl bg-white text-black">
-          <div className=" space-y-4 ml-7 mt-14">
-            <p className="uppercase">for {listing?.houseType}</p>
-            <h1 className="text-4xl font-bold">{listing?.title}</h1>
-            <p className=" space-y-4">{listing?.description}</p>
+      <div className="px-4">
+        <div className="">
+          <h1 className="text-2xl font-bold text-gray-800 line-clamp-1 my-3">
+            {listing?.title}
+          </h1>
+          <ul className="flex items-center gap-6">
+            <li className="flex items-center gap-2">
+              <GiSofa size={22} />
+            </li>
+            <li className="flex items-center gap-2">
+              <FaCar size={22} />
+            </li>
+            <li className="flex items-center gap-2">
+              <FaBed size={25} />
+            </li>
+            <li className="flex items-center gap-2">
+              <FaBath size={21} />
+            </li>
+          </ul>
+          <p className="line-clamp-3 text-gray-800 my-3">
+            {listing?.description}
+          </p>
 
-            <div className="flex items-center  ">
-              <p className=" text-green-700 text-4xl font-bold">
-                {listing?.normalPrice}
-              </p>
-              <span className="ml-8 line-through">
-                {listing?.discountPrice}
-              </span>
-            </div>
+          <div className="flex items-center gap-2 text-gray-700">
+            <IoLocationSharp className="text-green-700 size-5" />
+            <p>{listing?.address}</p>
           </div>
 
-          <div className=" items-center text-center  justify-center">
-            <button className="text-white font-bold bg-green-800 py-4 px-20 rounded-xl">
-              See Details
-            </button>
+          <div className="flex items-center gap-2 my-4">
+            <p className="text-blue-950 text-4xl font-bold">
+              ${listing?.normalPrice}
+            </p>
+            <span className="ml-2 line-through text-green-800">
+              {listing?.discountPrice}
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
