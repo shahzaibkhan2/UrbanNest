@@ -243,7 +243,9 @@ const Search = () => {
           </button>
         </form>
       </section>
-      <section className="p-7 flex flex-col gap-32">
+      <section
+        className={`p-7 flex flex-col ${isLoading ? "gap-32" : "gap-16"}`}
+      >
         <h1 className="text-3xl font-bold text-gray-800">
           House Listing Results
         </h1>
