@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { apiUri } from "../constants/apiRoutes";
 import { toast } from "sonner";
+import BlockLoader from "../components/loaders/BlockLoader";
+import sadEmoji from "../assets/sad.png";
 
 const Search = () => {
   const navigate = useNavigate();
@@ -66,7 +68,6 @@ const Search = () => {
           setIsloading(false);
         }
       };
-
       fetchAllListings();
     }
   }, [location.search]);
@@ -242,8 +243,21 @@ const Search = () => {
           </button>
         </form>
       </section>
-      <section className="bg-blue-500">
-        <h1>House Listing Results</h1>
+      <section className="p-7 flex flex-col gap-32">
+        <h1 className="text-3xl font-bold text-gray-800">
+          House Listing Results
+        </h1>
+        {!isLoading && houselistings.length === 0 && (
+          <div className="text-lg font-semibold text-gray-800 p-8 -mt-28 flex items-center gap-3">
+            <p>Sorry ! No house listing found.</p>
+            <img
+              src={sadEmoji}
+              alt="house-picture"
+              className="size-10 rounded-full object-cover"
+            />
+          </div>
+        )}
+        {isLoading && <BlockLoader />}
       </section>
     </main>
   );
